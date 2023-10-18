@@ -1,0 +1,62 @@
+(*zad 1*)
+let list1 = [[3;4];[3];[4;21;9]];;
+
+let rec flatten1 (listX:'a list list) = match listX with 
+| [] -> []
+| _ -> (List.hd listX)@((flatten1) (List.tl listX));;
+
+
+(*zad 2*)
+let list2 = [3; 4; 6; 3];;
+
+let rec count (toBeCounted:'a) (listX:'a list) = match list with
+| [] -> 0
+| _ -> if List.hd listX = toBeCounted
+        then 1 + (count toBeCounted (List.tl listX)) else
+      count toBeCounted (List.tl listX);;
+
+
+(*zad 3*)
+let toBeCopied = "ha";;
+
+let rec replicate toBeReplicated howManyTimes = if howManyTimes > 0 
+then 
+  toBeReplicated::(replicate toBeReplicated (howManyTimes-1)) 
+else 
+  [];; 
+
+replicate toBeCopied 4;;
+
+(*zad 4*)
+let list4 = [3; 4; 6; 3];;
+
+let rec squareList listX = match listX with
+| [] -> []
+| _ -> ((List.hd listX)*(List.hd listX))::(squareList (List.tl listX));;
+
+
+(*zad 5*)
+let list5 = ["a";"b";"c";"b";"a"];;
+let list6 = ["a";"b";"c";"a"];;
+
+let rec remove_last listX = 
+  match listX with 
+  | [] -> [] 
+  | [_] -> [] 
+  | hd::tl -> hd::(remove_last tl);;
+ 
+let rec isPalindrome (listX:string list) = match listX with
+| [] -> true
+| _ -> if (((List.nth) listX ((List.length listX)-1)) = List.hd listX) then
+  (isPalindrome (remove_last (List.tl listX)))else false;;
+
+  (*zad 6*)
+  let rec listLength listX = match listX with
+  | [] -> 0
+  | _ -> 1 + (listLength (List.tl listX));;
+
+  (*zad 7*)
+ 
+  let rec solveInd c n = match n with
+  | 1. -> 1.
+  | _ -> (c*.(log10 n)) +. ((solveInd) c (n/.2.));;
