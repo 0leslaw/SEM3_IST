@@ -1,0 +1,22 @@
+# ninja log v5
+14	234	7197001806609956	CMakeFiles/zad2.dir/IntToArrayService.cpp.obj	d8b928b1f732d7e9
+2	225	7197001806509817	CMakeFiles/zad2.dir/main.cpp.obj	9f1e2acbbf4549e9
+3	241	7197002056437214	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+241	334	7197002057339830	zad2.exe	9a5f5581f2f05da4
+3	259	7197004158545577	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+259	356	7197004159490038	zad2.exe	9a5f5581f2f05da4
+3	241	7197004630957525	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+242	337	7197004631866050	zad2.exe	9a5f5581f2f05da4
+3	235	7197005067732606	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+236	331	7197005068656513	zad2.exe	9a5f5581f2f05da4
+3	239	7197005258796769	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+239	335	7197005259733753	zad2.exe	9a5f5581f2f05da4
+4	217	7197006645718692	CMakeFiles/zad2.dir/IntToArrayService.cpp.obj	d8b928b1f732d7e9
+10	254	7197006646091316	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+254	351	7197006647041975	zad2.exe	9a5f5581f2f05da4
+3	236	7197014242461906	CMakeFiles/zad2.dir/main.cpp.obj	9f1e2acbbf4549e9
+10	243	7197014242547033	CMakeFiles/zad2.dir/IntToArrayService.cpp.obj	d8b928b1f732d7e9
+16	277	7197014242882262	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+277	373	7197014243806619	zad2.exe	9a5f5581f2f05da4
+3	232	7197014936926656	CMakeFiles/zad2.dir/CNumber.cpp.obj	a9a1259caa88c5bc
+233	326	7197014937835054	zad2.exe	9a5f5581f2f05da4
