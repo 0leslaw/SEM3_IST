@@ -9,20 +9,20 @@ int main() {
 
     // Testowanie alokacji tablicy
     int** piTable;
-    int*** pointerToPiTable = &piTable;
-    TableService::bAllocTable2Dim(pointerToPiTable, 3, 3);
+
+    TableService::bAllocTable2Dim(&piTable, 3, 3);
     piTable[0][0]=23;
 
         cout << piTable[0][0] << endl;
 
     // dealokacja
-    TableService::bDeallocTable2Dim(pointerToPiTable, 3, 3);
+    TableService::bDeallocTable2Dim(&piTable, 3, 3);
 
     CTable tabStatic;
 
         cout << "nazwa statycznej tabeli przed zmiana: " + tabStatic.getTName() << endl;
-        tabStatic.setTName("stack_static");
 
+    tabStatic.setTName("stack_static");
     CTable tabStaticCopy(tabStatic);
 
         cout << "nazwa kopii statycznej tabeli po zmianie: " + tabStaticCopy.getTName() << endl;
