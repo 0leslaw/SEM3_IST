@@ -28,14 +28,15 @@ class CNumber {
         CNumber operator+(CNumber other);
 
         CNumber operator-(CNumber other);
-//
-//        CNumber operator*(const CNumber& other);
-//
-//        CNumber operator/(const CNumber& other);
+
+        CNumber operator*(const CNumber& other);
+
+        CNumber operator/(const CNumber& other);
         bool isBiggerThan(const CNumber& other);
         CNumber addHelper(const CNumber& other, bool isPositive);
         CNumber subtractHelper(const CNumber& other, bool isPositive);
         int findIndexOfLastZero(const int* array, int length);
+        int changeToNumber(const CNumber& other);
 
 
         std::string toString();

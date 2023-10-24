@@ -5,6 +5,7 @@
 #include "CNumber.h"
 #include "IntToArrayService.h"
 #include <cstdio>
+#include <valarray>
 
 CNumber::CNumber() {
     arrayLength = 0;
@@ -81,32 +82,32 @@ std::string CNumber::toString() {
 
 CNumber CNumber::operator+(CNumber other) {
     //determine is positive
-    bool isThisBigger = this->isBiggerThan(other);
-    if(this->isPositive && other.isPositive)
-        return this->addHelper(other,true);
-    else if(this->isPositive && !other.isPositive){
+    bool isThisBigger = isBiggerThan(other);
+    if(isPositive && other.getIsPositive())
+        return addHelper(other,true);
+    else if(isPositive && !other.getIsPositive()){
         if(isThisBigger)
-            return this->subtractHelper(other, true);
+            return subtractHelper(other, true);
         else
             return other.subtractHelper(*this, false);
     }
         
-    else if(!this->isPositive && other.isPositive) {
+    else if(!isPositive && other.getIsPositive()) {
         if(isThisBigger)
-            return this->subtractHelper(other, false);
+            return subtractHelper(other, false);
         else
             return other.subtractHelper(*this, true);
     }
     else
-        return this->addHelper(other, false);
+        return addHelper(other, false);
 }
 
 CNumber CNumber::operator-(CNumber other) {
     //determine is positive
-    bool isThisBigger = this->isBiggerThan(other);
-    if(this->isPositive && other.isPositive){
+    bool isThisBigger = isBiggerThan(other);
+    if(isPositive && other.getIsPositive()){
         if(isThisBigger)
-            return this->subtractHelper(other, true);
+            return subtractHelper(other, true);
         else
             return other.subtractHelper(*this, false);
     }
@@ -126,7 +127,7 @@ CNumber CNumber::operator-(CNumber other) {
 
 bool CNumber::isBiggerThan(const CNumber &other) {
     if(this->arrayLength > other.getArrayLength() ||
-    (this->arrayLength = other.getArrayLength() &&
+    (this->arrayLength == other.getArrayLength() &&
             this->digitsArray[this->arrayLength-1]>other.getDigitsArray()[other.getArrayLength()-1]))
         return true;
 
@@ -184,8 +185,7 @@ CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
             tempDifferenceTable[i] = this->digitsArray[i] - other.getDigitsArray()[i] - carry;
             if (this->digitsArray[i] - other.getDigitsArray()[i] - carry < 0){
                 carry = 1;
-                this->arrayLength - 1 == i ?
-                        tempDifferenceTable[i]+=10 : tempDifferenceTable[i]+=9;
+                tempDifferenceTable[i]+=10;
             }
                 
             else
@@ -204,21 +204,15 @@ CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
             tempDifferenceTable[i] = other.getDigitsArray()[i] - carry;
             if (other.getDigitsArray()[i] - carry < 0) {
                 carry = 1;
-                other.getDigitsArray()[i] - 1 == i ?
-                tempDifferenceTable[i] += 10 : tempDifferenceTable[i] += 9;
+                tempDifferenceTable[i] += 10;
             }else
                 carry = 0;
         }
-        //adjusting array
-        else{
-            if (carry == 1)
-                tempDifferenceTable[i] = carry;
-            else{
-                newLength = newLength - findIndexOfLastZero(tempDifferenceTable, newLength) - 1;
-                IntToArrayService::cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
-            }
-        }
+
     }
+    //adjusting array
+    newLength = newLength - findIndexOfLastZero(tempDifferenceTable, newLength) - 1;
+    IntToArrayService::cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
     return CNumber(tempDifferenceTable, newLength, isPositive);
 }
 
@@ -231,14 +225,51 @@ int CNumber::findIndexOfLastZero(const int *array, int length) {
     }
     return index;
 }
-//
-//    CNumber &CNumber::operator*(const CNumber &other) {
-//        return <#initializer#>;
-//    }
-//
-//    CNumber &CNumber::operator/(const CNumber &other) {
-//        return &other;
-//    }
+
+CNumber CNumber::operator*(const CNumber &other) {
+    int newLength = other.getArrayLength()+ arrayLength;
+    int multiplication = 0;
+    int powrJ = 1;
+    int powrI = 1;
+    for (int i = 0; i < other.getArrayLength(); i++) {
+        for (int j = 0; j < arrayLength; ++j) {
+            int val = (other.getDigitsArray()[i] * (digitsArray[j] * powrJ)) * powrI;
+            multiplication += val;
+            powrJ *= 10;
+        }
+        powrJ=1;
+        powrI*=10;
+    }
+    if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
+        multiplication *= -1;
+    return *new CNumber(multiplication);
+}
+
+CNumber CNumber::operator/(const CNumber &other) {
+
+    int division = 0;
+    int tempDivision = 0;
+    int denominator = changeToNumber(other);
+
+    for (int i = arrayLength-1; i >= 0; i--) {
+        tempDivision = tempDivision*10 + digitsArray[i];
+        if (tempDivision >= denominator){
+            division += tempDivision/denominator * (int)pow(10,i);
+            tempDivision = tempDivision % denominator;
+        }
+    }
+    return *new CNumber(division);
+}
+
+int CNumber::changeToNumber(const CNumber &other) {
+    int number = 0;
+    int magnitude = 1;
+    for (int i = 0; i < other.getArrayLength(); i++) {
+        number += other.getDigitsArray()[i]*magnitude;
+        magnitude *= 10;
+    }
+    return number;
+}
 
 
 
