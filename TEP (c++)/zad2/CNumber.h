@@ -16,22 +16,27 @@ class CNumber {
 
         CNumber(int value);
 
-    CNumber(int *&digitsArray, int arrayLength, bool isPositive);
+        CNumber(int *&digitsArray, int arrayLength, bool isPositive);
 
 
-    ~CNumber();
+        ~CNumber();
 
         void operator=(const int value);
 
         void operator=(const CNumber& other);
 
-        CNumber operator+(const CNumber& other);
+        CNumber operator+(CNumber other);
 
-//        CNumber operator-(const CNumber& other);
+        CNumber operator-(CNumber other);
 //
 //        CNumber operator*(const CNumber& other);
 //
 //        CNumber operator/(const CNumber& other);
+        bool isBiggerThan(const CNumber& other);
+        CNumber addHelper(const CNumber& other, bool isPositive);
+        CNumber subtractHelper(const CNumber& other, bool isPositive);
+        int findIndexOfLastZero(const int* array, int length);
+
 
         std::string toString();
 

@@ -3,12 +3,12 @@
 //
 
 #include <iostream>
+#include <complex>
 #include "IntToArrayService.h"
 
     int IntToArrayService::findIntLength(int value) {
 
-        if(value < 0)
-            return 0;
+        value = std::abs(value);
 
         int length = 1;
         int magnitude = 10;
@@ -23,6 +23,7 @@
 
     int *IntToArrayService::makeArrayFromNumber(int value, int length) {
 
+        value = std::abs(value);
         if(length == 0)
             return 0;
 
