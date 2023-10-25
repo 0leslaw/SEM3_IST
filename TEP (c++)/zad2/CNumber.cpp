@@ -6,6 +6,8 @@
 #include "IntToArrayService.h"
 #include <cstdio>
 #include <valarray>
+#include <iostream>
+#include <complex>
 
 CNumber::CNumber() {
     arrayLength = 0;
@@ -270,6 +272,52 @@ int CNumber::changeToNumber(const CNumber &other) {
     }
     return number;
 }
+
+
+int CNumber::findIntLength(int value) {
+
+    value = std::abs(value);
+
+    int length = 1;
+    int magnitude = 10;
+
+    while (magnitude < value){
+        magnitude*=10;
+        length++;
+    }
+    return length;
+}
+
+int *CNumber::makeArrayFromNumber(int value, int length) {
+
+    value = std::abs(value);
+    if(length == 0)
+        return 0;
+
+    int *arrPointer = new int[length];
+
+    int magnitude = 10;
+    int last = value % magnitude;
+    arrPointer[0] = last;
+
+    for (int i = 1; i<length; i++) {
+        arrPointer[i] = ((value % (magnitude*10)) - last) / magnitude;
+        magnitude*=10;
+        last = value % magnitude;
+    }
+    return arrPointer;
+}
+
+int *CNumber::cutArrayStartingAtLastIndex(int *&toBeCut, int desiredLength) {
+    int* cut = new int[desiredLength];
+    for (int i = 0; i < desiredLength; i++) {
+        cut[i] = toBeCut[i];
+    }
+    delete[] toBeCut;
+    toBeCut = cut;
+    return toBeCut;
+}
+
 
 
 

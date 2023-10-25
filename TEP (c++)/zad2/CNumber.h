@@ -11,6 +11,16 @@ class CNumber {
         int* digitsArray;
         int arrayLength;
         bool isPositive;
+
+        static int findIntLength(int value);
+        static int* makeArrayFromNumber(int value, int length);
+        static int* cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
+        static int findIntLength(int value);
+        static int* makeArrayFromNumber(int value, int length);
+        CNumber addHelper(const CNumber& other, bool isPositive);
+        CNumber subtractHelper(const CNumber& other, bool isPositive);
+        int findIndexOfLastZero(const int* array, int length);
+        int changeToNumber(const CNumber& other);
     public:
         CNumber();
 
@@ -33,10 +43,7 @@ class CNumber {
 
         CNumber operator/(const CNumber& other);
         bool isBiggerThan(const CNumber& other);
-        CNumber addHelper(const CNumber& other, bool isPositive);
-        CNumber subtractHelper(const CNumber& other, bool isPositive);
-        int findIndexOfLastZero(const int* array, int length);
-        int changeToNumber(const CNumber& other);
+
 
 
         std::string toString();
@@ -52,6 +59,7 @@ class CNumber {
     bool getIsPositive() const;
 
     void setIsPositive(bool isPositive);
+
 };
 
 
