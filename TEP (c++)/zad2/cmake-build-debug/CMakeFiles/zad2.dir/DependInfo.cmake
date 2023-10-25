@@ -9,7 +9,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/CNumber.cpp" "CMakeFiles/zad2.dir/CNumber.cpp.obj" "gcc" "CMakeFiles/zad2.dir/CNumber.cpp.obj.d"
-  "C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/IntToArrayService.cpp" "CMakeFiles/zad2.dir/IntToArrayService.cpp.obj" "gcc" "CMakeFiles/zad2.dir/IntToArrayService.cpp.obj.d"
   "C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/main.cpp" "CMakeFiles/zad2.dir/main.cpp.obj" "gcc" "CMakeFiles/zad2.dir/main.cpp.obj.d"
   )
 

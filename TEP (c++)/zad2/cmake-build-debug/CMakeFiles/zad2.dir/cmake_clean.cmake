@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/zad2.dir/CNumber.cpp.obj"
   "CMakeFiles/zad2.dir/CNumber.cpp.obj.d"
-  "CMakeFiles/zad2.dir/IntToArrayService.cpp.obj"
-  "CMakeFiles/zad2.dir/IntToArrayService.cpp.obj.d"
   "CMakeFiles/zad2.dir/main.cpp.obj"
   "CMakeFiles/zad2.dir/main.cpp.obj.d"
   "libzad2.dll.a"

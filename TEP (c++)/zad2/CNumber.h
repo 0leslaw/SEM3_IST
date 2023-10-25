@@ -9,18 +9,25 @@
 class CNumber {
     private:
         int* digitsArray;
+
         int arrayLength;
+
         bool isPositive;
 
-        static int findIntLength(int value);
-        static int* makeArrayFromNumber(int value, int length);
+
         static int* cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
+
         static int findIntLength(int value);
+
         static int* makeArrayFromNumber(int value, int length);
+
         CNumber addHelper(const CNumber& other, bool isPositive);
+
         CNumber subtractHelper(const CNumber& other, bool isPositive);
+
         int findIndexOfLastZero(const int* array, int length);
-        int changeToNumber(const CNumber& other);
+
+        static int changeToNumber(const CNumber& other);
     public:
         CNumber();
 
@@ -28,12 +35,11 @@ class CNumber {
 
         CNumber(int *&digitsArray, int arrayLength, bool isPositive);
 
-
         ~CNumber();
 
-        void operator=(const int value);
+        CNumber& operator=(const int value);
 
-        void operator=(const CNumber& other);
+        CNumber& operator=(const CNumber& other);
 
         CNumber operator+(CNumber other);
 
@@ -42,6 +48,7 @@ class CNumber {
         CNumber operator*(const CNumber& other);
 
         CNumber operator/(const CNumber& other);
+
         bool isBiggerThan(const CNumber& other);
 
 
@@ -52,13 +59,13 @@ class CNumber {
 
         int getArrayLength() const;
 
-    void setDigitsArray(int *digitsArray);
+        void setDigitsArray(int *digitsArray);
 
-    void setArrayLength(int arrayLength);
+        void setArrayLength(int arrayLength);
 
-    bool getIsPositive() const;
+        bool getIsPositive() const;
 
-    void setIsPositive(bool isPositive);
+        void setIsPositive(bool isPositive);
 
 };
 

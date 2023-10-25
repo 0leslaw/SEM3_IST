@@ -88,12 +88,6 @@
 		<Unit filename="C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/CNumber.h">
 			<Option target="zad2"/>
 		</Unit>
-		<Unit filename="C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/IntToArrayService.cpp">
-			<Option target="zad2"/>
-		</Unit>
-		<Unit filename="C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/IntToArrayService.h">
-			<Option target="zad2"/>
-		</Unit>
 		<Unit filename="C:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP (c++)/zad2/main.cpp">
 			<Option target="zad2"/>
 		</Unit>

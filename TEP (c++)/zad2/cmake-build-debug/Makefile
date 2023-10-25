@@ -152,30 +152,6 @@ CNumber.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\zad2.dir\build.make CMakeFiles/zad2.dir/CNumber.cpp.s
 .PHONY : CNumber.cpp.s
 
-IntToArrayService.obj: IntToArrayService.cpp.obj
-.PHONY : IntToArrayService.obj
-
-# target to build an object file
-IntToArrayService.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\zad2.dir\build.make CMakeFiles/zad2.dir/IntToArrayService.cpp.obj
-.PHONY : IntToArrayService.cpp.obj
-
-IntToArrayService.i: IntToArrayService.cpp.i
-.PHONY : IntToArrayService.i
-
-# target to preprocess a source file
-IntToArrayService.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\zad2.dir\build.make CMakeFiles/zad2.dir/IntToArrayService.cpp.i
-.PHONY : IntToArrayService.cpp.i
-
-IntToArrayService.s: IntToArrayService.cpp.s
-.PHONY : IntToArrayService.s
-
-# target to generate assembly for a file
-IntToArrayService.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\zad2.dir\build.make CMakeFiles/zad2.dir/IntToArrayService.cpp.s
-.PHONY : IntToArrayService.cpp.s
-
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -212,9 +188,6 @@ help:
 	@echo ... CNumber.obj
 	@echo ... CNumber.i
 	@echo ... CNumber.s
-	@echo ... IntToArrayService.obj
-	@echo ... IntToArrayService.i
-	@echo ... IntToArrayService.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

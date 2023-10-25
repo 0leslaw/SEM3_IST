@@ -3,7 +3,6 @@
 //
 
 #include "CNumber.h"
-#include "IntToArrayService.h"
 #include <cstdio>
 #include <valarray>
 #include <iostream>
@@ -16,8 +15,8 @@ CNumber::CNumber() {
 }
 
 CNumber::CNumber(int value) {
-    arrayLength = IntToArrayService::findIntLength(value);
-    digitsArray = IntToArrayService::makeArrayFromNumber(value,arrayLength);
+    arrayLength = findIntLength(value);
+    digitsArray = makeArrayFromNumber(value,arrayLength);
     value > 0 ?
     isPositive = true : isPositive = false;
 }
@@ -30,41 +29,24 @@ CNumber::~CNumber() {
 //       delete[] digitsArray;
 }
 
-void CNumber::operator=(const int value) {
+CNumber& CNumber::operator=(const int value) {
+
     delete[] digitsArray;
-    arrayLength = IntToArrayService::findIntLength(value);
-    digitsArray = IntToArrayService::makeArrayFromNumber(value,arrayLength);
+    arrayLength = findIntLength(value);
+    digitsArray = makeArrayFromNumber(value,arrayLength);
     value > 0 ? isPositive = true : isPositive = false;
+    return *this;
 }
 
-void CNumber::operator=(const CNumber &other) {
+CNumber& CNumber::operator=(const CNumber &other) {
+    if (this == &other)
+        return *this;
+
     delete[] digitsArray;
     arrayLength = other.getArrayLength();
     digitsArray = other.getDigitsArray();
     isPositive = other.getIsPositive();
-}
-
-int *CNumber::getDigitsArray() const {
-    return digitsArray;
-}
-int CNumber::getArrayLength() const {
-    return arrayLength;
-}
-
-void CNumber::setDigitsArray(int *digitsArray) {
-    CNumber::digitsArray = digitsArray;
-}
-
-void CNumber::setArrayLength(int arrayLength) {
-    CNumber::arrayLength = arrayLength;
-}
-
-bool CNumber::getIsPositive() const {
-    return isPositive;
-}
-
-void CNumber::setIsPositive(bool isPositive) {
-    CNumber::isPositive = isPositive;
+    return *this;
 }
 
 std::string CNumber::toString() {
@@ -170,7 +152,7 @@ CNumber CNumber::addHelper(const CNumber &other, bool isPositive) {
             if (carry == 1)
                 tempSumTable[i] = carry;
             else{
-                IntToArrayService::cutArrayStartingAtLastIndex(tempSumTable,--newLength);
+                cutArrayStartingAtLastIndex(tempSumTable,--newLength);
             }
         }
     }
@@ -214,7 +196,7 @@ CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
     }
     //adjusting array
     newLength = newLength - findIndexOfLastZero(tempDifferenceTable, newLength) - 1;
-    IntToArrayService::cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
+    cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
     return CNumber(tempDifferenceTable, newLength, isPositive);
 }
 
@@ -260,6 +242,8 @@ CNumber CNumber::operator/(const CNumber &other) {
             tempDivision = tempDivision % denominator;
         }
     }
+    if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
+        division *= -1;
     return *new CNumber(division);
 }
 
@@ -318,6 +302,29 @@ int *CNumber::cutArrayStartingAtLastIndex(int *&toBeCut, int desiredLength) {
     return toBeCut;
 }
 
+// getters & setters
+int *CNumber::getDigitsArray() const {
+    return digitsArray;
+}
+int CNumber::getArrayLength() const {
+    return arrayLength;
+}
+
+void CNumber::setDigitsArray(int *digitsArray) {
+    CNumber::digitsArray = digitsArray;
+}
+
+void CNumber::setArrayLength(int arrayLength) {
+    CNumber::arrayLength = arrayLength;
+}
+
+bool CNumber::getIsPositive() const {
+    return isPositive;
+}
+
+void CNumber::setIsPositive(bool isPositive) {
+    CNumber::isPositive = isPositive;
+}
 
 
 
