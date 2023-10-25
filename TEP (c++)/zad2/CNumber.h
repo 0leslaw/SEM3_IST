@@ -28,7 +28,17 @@ class CNumber {
         int findIndexOfLastZero(const int* array, int length);
 
         static int changeToNumber(const CNumber& other);
+
+        static void zeroOut(int*& array, int length);
+
+        int* sumTables(int* thisT,int tLength, int* other, int oLength);
+
+        bool isBiggerThanArray(int *thisT,int firstIndex, int lastIndex, int *other, int oLength);
+
+        static int *subTables(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
+
     public:
+
         CNumber();
 
         CNumber(int value);
@@ -66,6 +76,7 @@ class CNumber {
         bool getIsPositive() const;
 
         void setIsPositive(bool isPositive);
+
 
 };
 
