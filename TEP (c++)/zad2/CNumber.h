@@ -14,8 +14,9 @@ class CNumber {
 
         bool isPositive;
 
+        static int findFirstNonZeroIndex(int*& toBeCut, int length);
 
-        static int* cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
+        static void cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
 
         static int findIntLength(int value);
 
@@ -35,7 +36,7 @@ class CNumber {
 
         bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
 
-        static void subTables(int *&thisT, int firstIndex, int lastIndex, int *other, int oLength, int DIVISION_LENGTH);
+        static void subTables(int *&thisT, int firstIndex, int* lastIndex, int *other, int oLength);
 
     public:
 
