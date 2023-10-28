@@ -107,22 +107,23 @@ CNumber CNumber::operator-(CNumber other) {
 CNumber CNumber::operator*(const CNumber &other) {
     int newLength = other.getArrayLength()+ arrayLength;
     int* MultTable = new int[newLength];
-    int tempMultLength = arrayLength+1;
-    int* tempMult = new int[tempMultLength];
-    zeroOut(MultTable, tempMultLength);
-
+    int* tempMult = new int[newLength];
+    zeroOut(MultTable, newLength);
+    zeroOut(tempMult,newLength);
     int carry = 0;
 
     for (int i = 0; i < other.getArrayLength(); i++) {
-        for (int j = 0; j < arrayLength; ++j) {
+        for (int j = 0; j < arrayLength; j++) {
             tempMult[j+i] = (other.getDigitsArray()[i] * digitsArray[j] + carry) % 10;
-            carry = (other.getDigitsArray()[i] * digitsArray[j]) / 10;
+            carry = (other.getDigitsArray()[i] * digitsArray[j] + carry) / 10;
         }
         tempMult[i+arrayLength] = carry;
-        MultTable = sumTables(MultTable,newLength,tempMult,tempMultLength);
-        delete[] tempMult;
-        tempMult = new int[tempMultLength++];
+        carry = 0;
+        MULTIPLICATION_sumTables(MultTable, newLength, tempMult, newLength);
+        zeroOut(tempMult,newLength);
     }
+    if (MultTable[newLength-1] == 0)
+        cutArrayStartingAtLastIndex(MultTable,newLength--);
     if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
         return CNumber(MultTable, newLength, false);
     else
@@ -313,7 +314,7 @@ CNumber CNumber::subtractHelper(const CNumber &other, bool isNewPositive) {
     return CNumber(tempDifferenceTable, newLength, isNewPositive);
 }
 
-int CNumber::changeToNumberIfFitsInt(const CNumber &other) {
+int CNumber::changeToNumberIfFitsInt(CNumber other) {
     if(other.getArrayLength()>10 || (other.getArrayLength() == 10 && other.getDigitsArray()[9] > 2))
         return -1;
     int number = 0;
@@ -322,6 +323,8 @@ int CNumber::changeToNumberIfFitsInt(const CNumber &other) {
         number += other.getDigitsArray()[i]*magnitude;
         magnitude *= 10;
     }
+    if (!other.getIsPositive())
+        number *= -1;
     return number;
 }
 // getters & setters
@@ -348,44 +351,39 @@ void CNumber::setIsPositive(bool isPositive) {
     CNumber::isPositive = isPositive;
 }
 
-int* CNumber::sumTables(int* thisT,int tLength, int* other,int oLength) {
-    int newLength = std::max(oLength, tLength)+1;
-    int* tempSumTable = new int[newLength];
+void CNumber::MULTIPLICATION_sumTables(int* thisT, int tLength, int* other, int oLength) {
+    int newLength = std::max(oLength, tLength);
     int carry = 0;
+    int val = 0;
     for (int i = 0; i < newLength; i++) {
         if (tLength - 1 >= i && oLength-1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
-            int val = (thisT[i] + other[i] + carry) % 10;
-            tempSumTable[i] = val;
-            if (thisT[i] + other[i] + carry > 9)
+            val = (thisT[i] + other[i] + carry);
+            thisT[i] = val % 10;
+            if (val > 9)
                 carry = 1;
             else
                 carry = 0;
         }
-        else if(tLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
-            tempSumTable[i] = (thisT[i] + carry) % 10;
-            if (thisT[i] + carry > 9)
+        else if(tLength - 1 >= i) {// else if max index of this array is bigger/equal than current then:
+            val = (thisT[i] + carry);
+            thisT[i] = val % 10;
+            if (val > 9)
                 carry = 1;
             else
                 carry = 0;
         }
         else if(oLength - 1 >= i) {
-            int val = (other[i] + carry) % 10;
-            tempSumTable[i] = val;
-            if (other[i] + carry > 9)
+            val = other[i] + carry;
+            thisT[i] = val % 10;
+            if (val > 9)
                 carry = 1;
             else
                 carry = 0;
         }
-            //last index
-        else{
-            if (carry == 1)
-                tempSumTable[i] = carry;
-            else{
-                cutArrayStartingAtLastIndex(tempSumTable,--newLength);
-            }
-        }
+        //last index
+        else
+        thisT[i] = carry;
     }
-    return tempSumTable;
 }
 
 void CNumber::DIVISION_subTables(int*& thisT, int firstIndex, int* lastIndex , int* other, int oLength){

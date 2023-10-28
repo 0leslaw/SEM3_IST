@@ -30,7 +30,7 @@ class CNumber {
 
         static void zeroOut(int*& array, int length);
 
-        static int* sumTables(int* thisT,int tLength, int* other, int oLength);
+        static void MULTIPLICATION_sumTables(int* thisT, int tLength, int* other, int oLength);
 
         static bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
 
@@ -62,7 +62,7 @@ class CNumber {
 
         bool isAbsoluteBiggerEqualThan(const CNumber& other);
 
-        static int changeToNumberIfFitsInt(const CNumber& other);
+        static int changeToNumberIfFitsInt(CNumber other);
 
 
         std::string toString();
