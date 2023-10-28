@@ -62,6 +62,8 @@ class CNumber {
 
         bool isAbsoluteBiggerEqualThan(const CNumber& other);
 
+        bool isAbsoluteEqual(const CNumber& other);
+
         static int changeToNumberIfFitsInt(CNumber other);
 
 

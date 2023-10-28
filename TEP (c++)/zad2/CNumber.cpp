@@ -135,7 +135,13 @@ CNumber CNumber::operator/(const CNumber &other) {
         std::cout << "division by zero is not allowed!!" << std::endl;
         return CNumber(-1);
     }
-    if(other.getArrayLength() > arrayLength)
+    if(this->isAbsoluteEqual(other)) {
+        if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
+            return CNumber(-1);
+        else
+            return CNumber(1);
+    }
+    else if(!isAbsoluteBiggerEqualThan(other))
         return CNumber(0);
 
     int* division = new int[arrayLength];
@@ -158,6 +164,7 @@ CNumber CNumber::operator/(const CNumber &other) {
             subDivisionDigit++;
 
         }
+
         division[i] = subDivisionDigit;
         subDivisionDigit = 0;
     }
@@ -218,16 +225,18 @@ bool CNumber::isAbsoluteBiggerEqualThan(const CNumber &other) {
 }
 
 bool CNumber::isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength) {
+    while (thisT[lastIndex] == 0)
+        lastIndex--;
     if(lastIndex+1-firstIndex > oLength)
         return true;
     if(lastIndex+1-firstIndex < oLength)
         return false;
 
-    while (thisT[lastIndex] == other[oLength-1] && lastIndex > -2){
+    while (thisT[lastIndex] == other[oLength-1] && lastIndex > firstIndex){
         lastIndex--;
         oLength--;
     }
-    if (lastIndex != -1 && thisT[lastIndex] < other[oLength-1])
+    if (thisT[lastIndex] < other[oLength-1])
         return false;
 
     return true;
@@ -418,8 +427,6 @@ void CNumber::DIVISION_subTables(int*& thisT, int firstIndex, int* lastIndex , i
                 carry = 0;
         }
     }
-    while (thisT[*lastIndex] == 0)
-        *lastIndex = *lastIndex - 1;
 }
 
 void CNumber::zeroOut(int *&array, int length) {
@@ -441,6 +448,17 @@ std::string CNumber::toString() {
     std::sprintf(buffer, "%d", arrayLength);
     std::string arrayLengthToString = buffer;
     return "THE NUMBER IS: " + array + "\n AND ITS LENGTH IS: " + arrayLengthToString + "\n";
+}
+
+bool CNumber::isAbsoluteEqual(const CNumber &other) {
+    if (other.getArrayLength() != arrayLength)
+        return false;
+
+    for (int i = 0; i < arrayLength; i++)
+        if (digitsArray[i] != other.getDigitsArray()[i])
+            return false;
+
+    return true;
 }
 
 
