@@ -119,10 +119,10 @@ bool CNumber::isBiggerThan(const CNumber &other) {
         return false;
 }
 
-bool CNumber::isBiggerThanArray(int *thisT,int firstIndex, int lastIndex, int *other, int oLength) {
+bool CNumber::isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength) {
     if(lastIndex+1-firstIndex > oLength ||
        (lastIndex+1-firstIndex == oLength &&
-        thisT[firstIndex]>other[oLength-1]))
+        thisT[lastIndex]>other[oLength-1]))
         return true;
 
     else
@@ -254,34 +254,32 @@ CNumber CNumber::operator/(const CNumber &other) {
     zeroOut(division,newLength);
     int* tempDivision = new int[newLength];
     zeroOut(tempDivision,newLength);
-    int lastCounted = 0;
+    int lastCounted = arrayLength-1;
     int subDivisionDigit = 0;
 
-    for (int i = 0; i < 0; i++) {
-        if (isBiggerThanArray(other.getDigitsArray(),
-                              lastCounted, i ,
-                              tempDivision, newLength)){
-            tempDivision[i] = digitsArray[i];
-            division[i] = 0;
-        }else{
 
-            while (isBiggerThanArray(other.getDigitsArray(),
-                                     lastCounted, i ,
-                                     tempDivision, newLength)){
-                tempDivision = subTables(tempDivision,lastCounted,i,
-                                         other.getDigitsArray(),other.getArrayLength());
+    for (int i = arrayLength-1; i >= 0; i--) {
+        tempDivision[i] = digitsArray[i];
+        if (!isBiggerEqualThanArray(tempDivision,
+                                    i, lastCounted,
+                                    other.getDigitsArray(), other.getArrayLength())) {
+
+            division[i] = 0;
+        } else {
+
+            while (isBiggerEqualThanArray(tempDivision,
+                                          i, lastCounted,
+                                          other.getDigitsArray(), other.getArrayLength())) {
+                subTables(tempDivision, i,lastCounted,
+                                         other.getDigitsArray(), other.getArrayLength(),newLength);
                 subDivisionDigit++;
             }
-            if (tempDivision[i] == 0)
-                lastCounted = i+1;
-            else{
-                lastCounted = i;        //make sure the next subdivision is starting at correct index
-                while (tempDivision[lastCounted] != 0)
-                    lastCounted--;
-            }
-            division[i] = subDivisionDigit;
-            subDivisionDigit = 0;
+            //make sure the next subdivision is starting at correct index
+            while (tempDivision[lastCounted] == 0)
+                lastCounted--;
         }
+        division[i] = subDivisionDigit;
+        subDivisionDigit = 0;
     }
     if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
         return CNumber(division, newLength, false);
@@ -408,17 +406,16 @@ int* CNumber::sumTables(int* thisT,int tLength, int* other,int oLength) {
     return tempSumTable;
 }
 
-int* CNumber::subTables(int* thisT,int firstIndex,int lastIndex ,int* other,int oLength){
+void CNumber::subTables(int*& thisT,int firstIndex,int lastIndex ,int* other,int oLength,int DIVISION_LENGTH){
     int thisTLength = lastIndex - firstIndex + 1;
-    int newLength = std::max(oLength, thisTLength);
-    int* tempDifferenceTable = new int[newLength];
-
+    int* tempDifferenceTable = new int[DIVISION_LENGTH];
+    zeroOut(tempDifferenceTable, DIVISION_LENGTH);
 
     int carry = 0;
-    for (int i = 0; i < newLength; i++) {
+    for (int i = 0; i < DIVISION_LENGTH; i++) {
         if (thisTLength - 1 >= i && oLength -1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
-            tempDifferenceTable[i] = thisT[i] - other[i] - carry;
-            if (thisT[i] - other[i] - carry < 0){
+            tempDifferenceTable[i] = thisT[i+firstIndex] - other[i] - carry;
+            if (thisT[i+firstIndex] - other[i] - carry < 0){
                 carry = 1;
                 tempDifferenceTable[i]+=10;
             }
@@ -427,8 +424,8 @@ int* CNumber::subTables(int* thisT,int firstIndex,int lastIndex ,int* other,int 
                 carry = 0;
         }
         else if(thisTLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
-            tempDifferenceTable[i] = thisT[i] - carry;
-            if (thisT[i] - carry < 0) {
+            tempDifferenceTable[i+firstIndex] = thisT[i+firstIndex] - carry;
+            if (thisT[i+firstIndex] - carry < 0) {
                 carry = 1;
                 tempDifferenceTable[i] += 10;
             }else
@@ -444,8 +441,8 @@ int* CNumber::subTables(int* thisT,int firstIndex,int lastIndex ,int* other,int 
         }
 
     }
-
-    return tempDifferenceTable;
+    delete[] thisT;
+    thisT = tempDifferenceTable;
 }
 
 void CNumber::zeroOut(int *&array, int length) {

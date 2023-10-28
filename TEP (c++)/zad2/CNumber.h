@@ -33,9 +33,9 @@ class CNumber {
 
         int* sumTables(int* thisT,int tLength, int* other, int oLength);
 
-        bool isBiggerThanArray(int *thisT,int firstIndex, int lastIndex, int *other, int oLength);
+        bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
 
-        static int *subTables(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
+        static void subTables(int *&thisT, int firstIndex, int lastIndex, int *other, int oLength, int DIVISION_LENGTH);
 
     public:
 
