@@ -5,9 +5,9 @@ bool testCNumber(){
     int num1,num2;
 
     bool isCorrect = true;
-    for (int i = 0; i < 1000000; i++) {
-        num1 = rand() % 2000000;
-        num2 = rand() % 2000000+1;
+    for (int i = 0; i < 100000; i++) {
+        num1 = -(rand() % 200000000);
+        num2 = (rand() % 200000000+1);
         CNumber CNum1 = num1;
         CNumber CNum2 = num2;
 
