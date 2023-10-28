@@ -17,7 +17,7 @@ CNumber::CNumber() {
 CNumber::CNumber(int value) {
     arrayLength = findIntLength(value);
     digitsArray = makeArrayFromNumber(value,arrayLength);
-    value > 0 ?
+    value >= 0 ?
     isPositive = true : isPositive = false;
 }
 
@@ -49,24 +49,9 @@ CNumber& CNumber::operator=(const CNumber &other) {
     return *this;
 }
 
-std::string CNumber::toString() {
-    std::string array = "";
-    if (!isPositive)
-        array += "- ";
-    char buffer[20];
-    for (int i = 0; i < arrayLength; ++i) {
-        std::sprintf(buffer, "%d", digitsArray[arrayLength-1-i]);
-        std::string digit = buffer;
-        array += digit + " ";
-    }
-    std::sprintf(buffer, "%d", arrayLength);
-    std::string arrayLengthToString = buffer;
-    return "THE NUMBER IS: " + array + "\n AND ITS LENGTH IS: " + arrayLengthToString + "\n";
-}
-
 CNumber CNumber::operator+(CNumber other) {
     //determine is positive
-    bool isThisBigger = isBiggerThan(other);
+    bool isThisBigger = isAbsoluteBiggerEqualThan(other);
     if(isPositive && other.getIsPositive())
         return addHelper(other,true);
     else if(isPositive && !other.getIsPositive()){
@@ -88,7 +73,7 @@ CNumber CNumber::operator+(CNumber other) {
 
 CNumber CNumber::operator-(CNumber other) {
     //determine is positive
-    bool isThisBigger = isBiggerThan(other);
+    bool isThisBigger = isAbsoluteBiggerEqualThan(other);
     if(isPositive && other.getIsPositive()){
         if(isThisBigger)
             return subtractHelper(other, true);
@@ -109,10 +94,10 @@ CNumber CNumber::operator-(CNumber other) {
     }
 }
 
-bool CNumber::isBiggerThan(const CNumber &other) {
+bool CNumber::isAbsoluteBiggerEqualThan(const CNumber &other) {
     if(this->arrayLength > other.getArrayLength() ||
     (this->arrayLength == other.getArrayLength() &&
-            this->digitsArray[this->arrayLength-1]>other.getDigitsArray()[other.getArrayLength()-1]))
+            this->digitsArray[this->arrayLength-1]>=other.getDigitsArray()[other.getArrayLength()-1]))
         return true;
 
     else
@@ -172,7 +157,7 @@ CNumber CNumber::addHelper(const CNumber &other, bool isPositive) {
 CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
     int newLength = std::max(other.getArrayLength(), this->arrayLength);
     int* tempDifferenceTable = new int[newLength];
-
+    zeroOut(tempDifferenceTable,newLength);
 
     int carry = 0;
     for (int i = 0; i < newLength; i++) {
@@ -205,7 +190,7 @@ CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
 
     }
     //adjusting array
-    newLength = newLength - findIndexOfLastZero(tempDifferenceTable, newLength) - 1;
+    newLength = std::max(findFirstNonZeroIndex(tempDifferenceTable,newLength) + 1,1);
     cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
     return CNumber(tempDifferenceTable, newLength, isPositive);
 }
@@ -246,6 +231,10 @@ CNumber CNumber::operator*(const CNumber &other) {
 }
 
 CNumber CNumber::operator/(const CNumber &other) {
+    if (other.getArrayLength() == 1 && other.getDigitsArray()[0] == 0) {
+        std::cout << "division by zero is not allowed!!" << std::endl;
+        return CNumber(-1);
+    }
     if(other.getArrayLength() > arrayLength)
         return CNumber(0);
 
@@ -261,25 +250,19 @@ CNumber CNumber::operator/(const CNumber &other) {
 
     for (int i = arrayLength-1; i >= 0; i--) {
         tempDivision[i] = digitsArray[i];
-        if (!isBiggerEqualThanArray(tempDivision,
-                                    i, *lastCounted,
-                                    other.getDigitsArray(), other.getArrayLength())) {
 
-            division[i] = 0;
-        } else {
+        while (isBiggerEqualThanArray(tempDivision,
+                                      i, *lastCounted,
+                                      other.getDigitsArray(), other.getArrayLength())) {
+            DIVISION_subTables(tempDivision, i, lastCounted,
+                               other.getDigitsArray(), other.getArrayLength());
+            subDivisionDigit++;
 
-            while (isBiggerEqualThanArray(tempDivision,
-                                          i, *lastCounted,
-                                          other.getDigitsArray(), other.getArrayLength())) {
-                subTables(tempDivision, i,lastCounted,
-                         other.getDigitsArray(), other.getArrayLength());
-                subDivisionDigit++;
-            }
         }
         division[i] = subDivisionDigit;
         subDivisionDigit = 0;
     }
-    newLength = findFirstNonZeroIndex(division, newLength) + 1;
+    newLength = std::max(findFirstNonZeroIndex(division,newLength) + 1,1);
     cutArrayStartingAtLastIndex(division, newLength);
     if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
         return CNumber(division, newLength, false);
@@ -303,10 +286,10 @@ int CNumber::findIntLength(int value) {
     value = std::abs(value);
 
     int length = 1;
-    int magnitude = 10;
 
-    while (magnitude < value){
-        magnitude*=10;
+
+    while (value/10 > 0){
+        value/=10;
         length++;
     }
     return length;
@@ -319,15 +302,9 @@ int *CNumber::makeArrayFromNumber(int value, int length) {
         return 0;
 
     int *arrPointer = new int[length];
-
-    int magnitude = 10;
-    int last = value % magnitude;
-    arrPointer[0] = last;
-
-    for (int i = 1; i<length; i++) {
-        arrPointer[i] = ((value % (magnitude*10)) - last) / magnitude;
-        magnitude*=10;
-        last = value % magnitude;
+    for (int i = 0; i<length; i++) {
+        arrPointer[i] = value % 10;
+        value/=10;
     }
     return arrPointer;
 }
@@ -410,7 +387,7 @@ int* CNumber::sumTables(int* thisT,int tLength, int* other,int oLength) {
     return tempSumTable;
 }
 
-void CNumber::subTables(int*& thisT,int firstIndex,int* lastIndex ,int* other,int oLength){
+void CNumber::DIVISION_subTables(int*& thisT, int firstIndex, int* lastIndex , int* other, int oLength){
     int thisTLength = *lastIndex - firstIndex + 1;
 
     int carry = 0;
@@ -442,7 +419,7 @@ void CNumber::subTables(int*& thisT,int firstIndex,int* lastIndex ,int* other,in
                 carry = 0;
         }
     }
-    if (thisT[*lastIndex] == 0)
+    while (thisT[*lastIndex] == 0)
         *lastIndex = *lastIndex - 1;
 }
 
@@ -450,6 +427,21 @@ void CNumber::zeroOut(int *&array, int length) {
     for (int i = 0; i < length; i++) {
         array[i] = 0;
     }
+}
+
+std::string CNumber::toString() {
+    std::string array = "";
+    if (!isPositive)
+        array += "- ";
+    char buffer[20];
+    for (int i = 0; i < arrayLength; ++i) {
+        std::sprintf(buffer, "%d", digitsArray[arrayLength-1-i]);
+        std::string digit = buffer;
+        array += digit + " ";
+    }
+    std::sprintf(buffer, "%d", arrayLength);
+    std::string arrayLengthToString = buffer;
+    return "THE NUMBER IS: " + array + "\n AND ITS LENGTH IS: " + arrayLengthToString + "\n";
 }
 
 

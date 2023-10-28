@@ -32,11 +32,11 @@ class CNumber {
 
         static void zeroOut(int*& array, int length);
 
-        int* sumTables(int* thisT,int tLength, int* other, int oLength);
+        static int* sumTables(int* thisT,int tLength, int* other, int oLength);
 
         bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
 
-        static void subTables(int *&thisT, int firstIndex, int* lastIndex, int *other, int oLength);
+        static void DIVISION_subTables(int *&thisT, int firstIndex, int* lastIndex, int *other, int oLength);
 
     public:
 
@@ -60,7 +60,7 @@ class CNumber {
 
         CNumber operator/(const CNumber& other);
 
-        bool isBiggerThan(const CNumber& other);
+        bool isAbsoluteBiggerEqualThan(const CNumber& other);
 
 
 

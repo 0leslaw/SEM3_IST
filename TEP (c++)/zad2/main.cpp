@@ -4,9 +4,9 @@
 
 int main() {
     CNumber number1, number2;
-    number1 = 25634;
+    number1 = 453;
     std::cout << number1.toString();
-    number2 = 454;
+    number2 = 0;
     number1 = number1 / number2;
     std::cout << number1.toString() << std::endl;
 
