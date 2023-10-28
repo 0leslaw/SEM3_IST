@@ -14,27 +14,25 @@ class CNumber {
 
         bool isPositive;
 
-        static int findFirstNonZeroIndex(int*& toBeCut, int length);
 
-        static void cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
-
+        //constructor helpers
         static int findIntLength(int value);
 
         static int* makeArrayFromNumber(int value, int length);
+        //operator helpers
+        static int findFirstNonZeroIndex(int*& toBeCut, int length);
+
+        static void cutArrayStartingAtLastIndex(int*& toBeCut, int desiredLength);
 
         CNumber addHelper(const CNumber& other, bool isPositive);
 
         CNumber subtractHelper(const CNumber& other, bool isPositive);
 
-        int findIndexOfLastZero(const int* array, int length);
-
-        static int changeToNumber(const CNumber& other);
-
         static void zeroOut(int*& array, int length);
 
         static int* sumTables(int* thisT,int tLength, int* other, int oLength);
 
-        bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
+        static bool isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength);
 
         static void DIVISION_subTables(int *&thisT, int firstIndex, int* lastIndex, int *other, int oLength);
 
@@ -45,6 +43,8 @@ class CNumber {
         CNumber(int value);
 
         CNumber(int *&digitsArray, int arrayLength, bool isPositive);
+
+        CNumber(const CNumber& other);
 
         ~CNumber();
 
@@ -62,6 +62,7 @@ class CNumber {
 
         bool isAbsoluteBiggerEqualThan(const CNumber& other);
 
+        static int changeToNumberIfFitsInt(const CNumber& other);
 
 
         std::string toString();

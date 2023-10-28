@@ -25,8 +25,15 @@ CNumber::CNumber(int *&digitsArray, int arrayLength, bool isPositive) : digitsAr
 arrayLength(arrayLength),
 isPositive(isPositive) {}
 
+CNumber::CNumber(const CNumber &other) {
+    arrayLength = other.getArrayLength();
+    digitsArray = new int[arrayLength];
+    for (int i = 0; i < arrayLength; i++)
+        digitsArray[i] = other.getDigitsArray()[i];
+    isPositive = other.getIsPositive();
+}
 CNumber::~CNumber() {
-//       delete[] digitsArray;
+       delete[] digitsArray;
 }
 
 CNumber& CNumber::operator=(const int value) {
@@ -44,7 +51,9 @@ CNumber& CNumber::operator=(const CNumber &other) {
 
     delete[] digitsArray;
     arrayLength = other.getArrayLength();
-    digitsArray = other.getDigitsArray();
+    digitsArray = new int[arrayLength];
+    for (int i = 0; i < arrayLength; i++)
+        digitsArray[i] = other.getDigitsArray()[i];
     isPositive = other.getIsPositive();
     return *this;
 }
@@ -94,116 +103,6 @@ CNumber CNumber::operator-(CNumber other) {
     }
 }
 
-bool CNumber::isAbsoluteBiggerEqualThan(const CNumber &other) {
-    if(this->arrayLength > other.getArrayLength() ||
-    (this->arrayLength == other.getArrayLength() &&
-            this->digitsArray[this->arrayLength-1]>=other.getDigitsArray()[other.getArrayLength()-1]))
-        return true;
-
-    else
-        return false;
-}
-
-bool CNumber::isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength) {
-    if(lastIndex+1-firstIndex > oLength ||
-       (lastIndex+1-firstIndex == oLength &&
-        thisT[lastIndex]>=other[oLength-1]))
-        return true;
-
-    else
-        return false;
-}
-
-CNumber CNumber::addHelper(const CNumber &other, bool isPositive) {
-    int newLength = std::max(other.getArrayLength(), this->arrayLength)+1;
-    int* tempSumTable = new int[newLength];
-    int carry = 0;
-    for (int i = 0; i < newLength; i++) {
-        if (this->arrayLength - 1 >= i && other.getArrayLength() -1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
-            int val = (this->digitsArray[i] + other.getDigitsArray()[i] + carry) % 10;
-            tempSumTable[i] = val;
-            if (this->digitsArray[i] + other.getDigitsArray()[i] + carry > 9)
-                carry = 1;
-            else
-                carry = 0;
-        }
-        else if(this->arrayLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
-            tempSumTable[i] = (this->digitsArray[i] + carry) % 10;
-            if (this->digitsArray[i] + carry > 9)
-                carry = 1;
-            else
-                carry = 0;
-        }
-        else if(other.getArrayLength() - 1 >= i) {
-            int val = (other.getDigitsArray()[i] + carry) % 10;
-            tempSumTable[i] = val;
-            if (other.getDigitsArray()[i] + carry > 9)
-                carry = 1;
-            else
-                carry = 0;
-        }
-            //last index
-        else{
-            if (carry == 1)
-                tempSumTable[i] = carry;
-            else{
-                cutArrayStartingAtLastIndex(tempSumTable,--newLength);
-            }
-        }
-    }
-    return CNumber(tempSumTable, newLength, isPositive);
-}
-
-CNumber CNumber::subtractHelper(const CNumber &other, bool isPositive) {
-    int newLength = std::max(other.getArrayLength(), this->arrayLength);
-    int* tempDifferenceTable = new int[newLength];
-    zeroOut(tempDifferenceTable,newLength);
-
-    int carry = 0;
-    for (int i = 0; i < newLength; i++) {
-        if (this->arrayLength - 1 >= i && other.getArrayLength() -1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
-            tempDifferenceTable[i] = this->digitsArray[i] - other.getDigitsArray()[i] - carry;
-            if (this->digitsArray[i] - other.getDigitsArray()[i] - carry < 0){
-                carry = 1;
-                tempDifferenceTable[i]+=10;
-            }
-                
-            else
-                carry = 0;
-        }
-        else if(this->arrayLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
-            tempDifferenceTable[i] = this->digitsArray[i] - carry;
-            if (this->digitsArray[i] - carry < 0) {
-                carry = 1;
-                tempDifferenceTable[i]+=10;
-            }else
-                carry = 0;
-        }
-        else if(other.getArrayLength() - 1 >= i) {
-            tempDifferenceTable[i] = other.getDigitsArray()[i] - carry;
-            if (other.getDigitsArray()[i] - carry < 0) {
-                carry = 1;
-                tempDifferenceTable[i] += 10;
-            }else
-                carry = 0;
-        }
-
-    }
-    //adjusting array
-    newLength = std::max(findFirstNonZeroIndex(tempDifferenceTable,newLength) + 1,1);
-    cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
-    return CNumber(tempDifferenceTable, newLength, isPositive);
-}
-
-int CNumber::findIndexOfLastZero(const int *array, int length) {
-    int index = -1;
-    for (int i = length-1; i >= 0; i++) {
-        if (array[i] != 0)
-            return index;
-        index++;
-    }
-    return index;
-}
 
 CNumber CNumber::operator*(const CNumber &other) {
     int newLength = other.getArrayLength()+ arrayLength;
@@ -238,11 +137,10 @@ CNumber CNumber::operator/(const CNumber &other) {
     if(other.getArrayLength() > arrayLength)
         return CNumber(0);
 
-    int newLength = arrayLength - other.getArrayLength() + 1;
-    int* division = new int[newLength];
-    zeroOut(division,newLength);
-    int* tempDivision = new int[newLength];
-    zeroOut(tempDivision,newLength);
+    int* division = new int[arrayLength];
+    zeroOut(division,arrayLength);
+    int* tempDivision = new int[arrayLength];
+    zeroOut(tempDivision,arrayLength);
     int* lastCounted = new int;
     *lastCounted = arrayLength - 1;
     int subDivisionDigit = 0;
@@ -262,7 +160,7 @@ CNumber CNumber::operator/(const CNumber &other) {
         division[i] = subDivisionDigit;
         subDivisionDigit = 0;
     }
-    newLength = std::max(findFirstNonZeroIndex(division,newLength) + 1,1);
+    int newLength = std::max(findFirstNonZeroIndex(division,arrayLength) + 1,1);
     cutArrayStartingAtLastIndex(division, newLength);
     if (isPositive && !other.getIsPositive() || !isPositive && other.getIsPositive())
         return CNumber(division, newLength, false);
@@ -270,24 +168,12 @@ CNumber CNumber::operator/(const CNumber &other) {
         return CNumber(division, newLength, true);
 }
 
-int CNumber::changeToNumber(const CNumber &other) {
-    int number = 0;
-    int magnitude = 1;
-    for (int i = 0; i < other.getArrayLength(); i++) {
-        number += other.getDigitsArray()[i]*magnitude;
-        magnitude *= 10;
-    }
-    return number;
-}
-
-
+// OPERATOR HELPER FUNCTIONS
 int CNumber::findIntLength(int value) {
 
     value = std::abs(value);
 
     int length = 1;
-
-
     while (value/10 > 0){
         value/=10;
         length++;
@@ -317,11 +203,126 @@ void CNumber::cutArrayStartingAtLastIndex(int *&toBeCut, int desiredLength) {
     delete[] toBeCut;
     toBeCut = cut;
 }
+
 int CNumber::findFirstNonZeroIndex(int *&toBeCut, int length) {
     int i = length-1;
     while (toBeCut[i] == 0)
         i--;
     return i;
+}
+
+bool CNumber::isAbsoluteBiggerEqualThan(const CNumber &other) {
+    return isBiggerEqualThanArray(digitsArray,0,arrayLength-1,
+                                  other.getDigitsArray(),other.getArrayLength());
+}
+
+bool CNumber::isBiggerEqualThanArray(int *thisT, int firstIndex, int lastIndex, int *other, int oLength) {
+    if(lastIndex+1-firstIndex > oLength)
+        return true;
+    if(lastIndex+1-firstIndex < oLength)
+        return false;
+
+    while (thisT[lastIndex] == other[oLength-1] && lastIndex > -2){
+        lastIndex--;
+        oLength--;
+    }
+    if (lastIndex != -1 && thisT[lastIndex] < other[oLength-1])
+        return false;
+
+    return true;
+}
+
+CNumber CNumber::addHelper(const CNumber &other, bool isNewPositive) {
+    int newLength = std::max(other.getArrayLength(), arrayLength)+1;
+    int* tempSumTable = new int[newLength];
+    int carry = 0;
+    for (int i = 0; i < newLength; i++) {
+        if (arrayLength - 1 >= i && other.getArrayLength() -1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
+            int val = (digitsArray[i] + other.getDigitsArray()[i] + carry) % 10;
+            tempSumTable[i] = val;
+            if (digitsArray[i] + other.getDigitsArray()[i] + carry > 9)
+                carry = 1;
+            else
+                carry = 0;
+        }
+        else if(arrayLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
+            tempSumTable[i] = (digitsArray[i] + carry) % 10;
+            if (digitsArray[i] + carry > 9)
+                carry = 1;
+            else
+                carry = 0;
+        }
+        else if(other.getArrayLength() - 1 >= i) {
+            int val = (other.getDigitsArray()[i] + carry) % 10;
+            tempSumTable[i] = val;
+            if (other.getDigitsArray()[i] + carry > 9)
+                carry = 1;
+            else
+                carry = 0;
+        }
+            //last index
+        else{
+            if (carry == 1)
+                tempSumTable[i] = carry;
+            else{
+                cutArrayStartingAtLastIndex(tempSumTable,--newLength);
+            }
+        }
+    }
+    return CNumber(tempSumTable, newLength, isNewPositive);
+}
+
+CNumber CNumber::subtractHelper(const CNumber &other, bool isNewPositive) {
+    int newLength = std::max(other.getArrayLength(), arrayLength);
+    int* tempDifferenceTable = new int[newLength];
+    zeroOut(tempDifferenceTable,newLength);
+
+    int carry = 0;
+    for (int i = 0; i < newLength; i++) {
+        if (arrayLength - 1 >= i && other.getArrayLength() -1 >= i){// if max index of this array and max index of other array is bigger/equal than current then:
+            tempDifferenceTable[i] = digitsArray[i] - other.getDigitsArray()[i] - carry;
+            if (digitsArray[i] - other.getDigitsArray()[i] - carry < 0){
+                carry = 1;
+                tempDifferenceTable[i]+=10;
+            }
+
+            else
+                carry = 0;
+        }
+        else if(arrayLength - 1 >= (i)) {// else if max index of this array is bigger/equal than current then:
+            tempDifferenceTable[i] = digitsArray[i] - carry;
+            if (digitsArray[i] - carry < 0) {
+                carry = 1;
+                tempDifferenceTable[i]+=10;
+            }else
+                carry = 0;
+        }
+        else if(other.getArrayLength() - 1 >= i) {
+            tempDifferenceTable[i] = other.getDigitsArray()[i] - carry;
+            if (other.getDigitsArray()[i] - carry < 0) {
+                carry = 1;
+                tempDifferenceTable[i] += 10;
+            }else
+                carry = 0;
+        }
+
+    }
+    //adjusting array
+    newLength = std::max(findFirstNonZeroIndex(tempDifferenceTable,newLength) + 1,1);
+    cutArrayStartingAtLastIndex(tempDifferenceTable, newLength);
+    return CNumber(tempDifferenceTable, newLength, isNewPositive);
+}
+
+int CNumber::changeToNumberIfFitsInt(const CNumber &other) {
+    if(other.getArrayLength()>10 || (other.getArrayLength() == 10 && other.getDigitsArray()[9] > 2))
+        return -1;
+    int number = 0;
+    int magnitude = 1;
+    for (int i = 0; i < other.getArrayLength(); i++) {
+        number += other.getDigitsArray()[i]*magnitude;
+        magnitude *= 10;
+    }
+    return number;
 }
 // getters & setters
 int *CNumber::getDigitsArray() const {
