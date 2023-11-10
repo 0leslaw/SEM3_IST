@@ -1,0 +1,30 @@
+(*ZAD 1 OCAML*)
+
+let mean3 (a,b,c) = (a+.b+.c)/.3.;;
+
+(*TESTY*) 
+
+mean3 (4.,8.,12.);;
+mean3 (1.,2.,12.);;
+mean3 (8.,8.,8.);;
+mean3 (2.,8.,20.);;
+mean3 (3.,4.,2.);;  
+
+
+
+//ZAD 2 SCALA
+
+def concatinate (list: List[String]): List[Int] = {
+    if(list.isEmpty)
+      List[Int]()
+    else
+      List[Int](list.head.length()) ::: concatinate(list.tail)
+  }
+
+//TESTY 
+
+println(ListaDrugaFunkcje.concatinate(List[String]("ala", "ma", "kotakaka")))
+println(ListaDrugaFunkcje.concatinate(List[String]("alakksf", "maf", "knsemdotakaka")))
+println(ListaDrugaFunkcje.concatinate(List[String]("alafnm", "mfa", "kotfnakaka","alakksf", "maf", "knsemdotakaka")))
+println(ListaDrugaFunkcje.concatinate(List[String]()))
+println(ListaDrugaFunkcje.concatinate(List[String]("a", "", "kotkaka")))

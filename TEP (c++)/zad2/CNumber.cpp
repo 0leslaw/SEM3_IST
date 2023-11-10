@@ -336,29 +336,6 @@ int CNumber::changeToNumberIfFitsInt(CNumber other) {
         number *= -1;
     return number;
 }
-// getters & setters
-int *CNumber::getDigitsArray() const {
-    return digitsArray;
-}
-int CNumber::getArrayLength() const {
-    return arrayLength;
-}
-
-void CNumber::setDigitsArray(int *digitsArray) {
-    CNumber::digitsArray = digitsArray;
-}
-
-void CNumber::setArrayLength(int arrayLength) {
-    CNumber::arrayLength = arrayLength;
-}
-
-bool CNumber::getIsPositive() const {
-    return isPositive;
-}
-
-void CNumber::setIsPositive(bool isPositive) {
-    CNumber::isPositive = isPositive;
-}
 
 void CNumber::MULTIPLICATION_sumTables(int* thisT, int tLength, int* other, int oLength) {
     int newLength = std::max(oLength, tLength);
@@ -389,9 +366,9 @@ void CNumber::MULTIPLICATION_sumTables(int* thisT, int tLength, int* other, int 
             else
                 carry = 0;
         }
-        //last index
+            //last index
         else
-        thisT[i] = carry;
+            thisT[i] = carry;
     }
 }
 
@@ -435,21 +412,6 @@ void CNumber::zeroOut(int *&array, int length) {
     }
 }
 
-std::string CNumber::toString() {
-    std::string array = "";
-    if (!isPositive)
-        array += "- ";
-    char buffer[20];
-    for (int i = 0; i < arrayLength; ++i) {
-        std::sprintf(buffer, "%d", digitsArray[arrayLength-1-i]);
-        std::string digit = buffer;
-        array += digit + " ";
-    }
-    std::sprintf(buffer, "%d", arrayLength);
-    std::string arrayLengthToString = buffer;
-    return "THE NUMBER IS: " + array + "\n AND ITS LENGTH IS: " + arrayLengthToString + "\n";
-}
-
 bool CNumber::isAbsoluteEqual(const CNumber &other) {
     if (other.getArrayLength() != arrayLength)
         return false;
@@ -460,8 +422,44 @@ bool CNumber::isAbsoluteEqual(const CNumber &other) {
 
     return true;
 }
+// getters & setters
+int *CNumber::getDigitsArray() const {
+    return digitsArray;
+}
+int CNumber::getArrayLength() const {
+    return arrayLength;
+}
 
+void CNumber::setDigitsArray(int *digitsArray) {
+    CNumber::digitsArray = digitsArray;
+}
 
+void CNumber::setArrayLength(int arrayLength) {
+    CNumber::arrayLength = arrayLength;
+}
+
+bool CNumber::getIsPositive() const {
+    return isPositive;
+}
+
+void CNumber::setIsPositive(bool isPositive) {
+    CNumber::isPositive = isPositive;
+}
+
+std::string CNumber::toString() {
+    std::string array = "";
+    if (!isPositive)
+        array += "- ";
+    char buffer[20];
+    for (int i = 0; i < arrayLength; ++i) {
+        std::sprintf(buffer, "%d", digitsArray[arrayLength-1-i]);
+        std::string digit = buffer;
+        array += digit;
+    }
+    std::sprintf(buffer, "%d", arrayLength);
+    std::string arrayLengthToString = buffer;
+    return "THE NUMBER IS: " + array + "\n AND ITS LENGTH IS: " + arrayLengthToString + "\n";
+}
 
 
 

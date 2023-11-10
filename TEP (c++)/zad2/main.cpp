@@ -38,12 +38,12 @@ bool testCNumber(){
 
 int main() {
     CNumber number1, number2;
-    number1 = 20376;
+    number1 = INT_MAX-2;
     std::cout << number1.toString();
-    number2 = 3;
-    number1 = number1 / number2;
+    number2 = INT_MAX-2;
+    number1 = number1 * number2;
     std::cout << number1.toString() << std::endl;
-    std::cout << testCNumber()<<std::endl;
+//    std::cout << testCNumber()<<std::endl;
 
     return 0;
 }
