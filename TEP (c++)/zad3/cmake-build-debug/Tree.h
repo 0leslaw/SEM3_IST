@@ -14,14 +14,17 @@ private:
         std::string* value;
         Node* left;
         Node* right;
+        int ammountOfVars;
     public:
         Node(std::string& value);
+        Node();
         Node* getLeft();
         Node* getRight();
         string* getValue();
+        void incVars();
         void setLeft(Node& node);
         void setRight(Node& node);
-        void setValue(string s);
+        void setValue(string& s);
 
     };
     Node* root;
@@ -29,7 +32,10 @@ private:
 public:
     Tree();
     bool setupTree(std::string& value);
-    bool setupTreeHelper(int* currentIndex, std::string& value, Node* root);
+    bool setupTreeHelper(int* currentIndex, std::string& value, Node& root);
+    void preorderPrint();
+    void preorderPrintHelper(Tree::Node *root);
+    void fintNextIndAfterFail(Tree::Node &root,int* currentIndex)
 };
 
 
