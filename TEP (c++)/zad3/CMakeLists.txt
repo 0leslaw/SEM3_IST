@@ -3,4 +3,4 @@ project(zad3)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(zad3 main.cpp cmake-build-debug/Tree.cpp cmake-build-debug/Tree.h)
+add_executable(zad3 main.cpp Tree.cpp Tree.h Node.cpp Node.h)
