@@ -19,7 +19,7 @@ private:
 
     bool setupTreeHelper(int* currentIndex, std::string& value, Node& root);
     void preorderPrintHelper(Node *root);
-    void fintNextIndAfterFail(Node &root,int* currentIndex);
+    void fintNextIndAfterFail(Node &root,string& value, int* currentIndex);
 public:
     Tree();
     bool setupTree(std::string& value);

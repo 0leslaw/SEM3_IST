@@ -7,10 +7,10 @@ Node::Node(std::string& value) {
     this->value = &value;
 
 }
-
+// in case of new arraylist it will loop endlessly, //TODO zapytac
 Node::Node() {
     this->value = NULL;
-    argList = new ArrayList<Node>();
+    argList = NULL;
 }
 
 
@@ -26,6 +26,18 @@ string *Node::getValue() {
 ArrayList<Node> *Node::getArgList() {
     return argList;
 }
+
+void Node::addArg(Node node) {
+    if(argList == NULL)
+        argList = new ArrayList<Node>();
+    argList->add(node);
+}
+
+bool Node::isArgListNULL() {
+    return argList == NULL;
+}
+
+
 
 
 

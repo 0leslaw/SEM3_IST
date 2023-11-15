@@ -10,8 +10,8 @@ Tree::Tree() : root(NULL), varList(new ArrayList<string>()){}
 
 bool Tree::setupTree(std::string& value) {
     int* currentIndex = new int(0);
-
-    return setupTreeHelper(currentIndex,value, *root);
+    root = new Node();
+    return setupTreeHelper(currentIndex,value,*root);
 }
 //TODO czy sprawdzac wyjscie za zakres na kazdym currentIndex++
 bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
@@ -21,37 +21,38 @@ bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
     if(value[*currentIndex] > 47 && value[*currentIndex] < 58){
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
-        *currentIndex++;
+        (*currentIndex)++;
         //FIND END OF VARIABLE CHECK IF IS A SPACE OR END, IF IS
         while (value[*currentIndex] > 47 && value[*currentIndex] < 58 && *currentIndex < value.length()-1)
-            *currentIndex++;
+            (*currentIndex)++;
 
-        value[*currentIndex++] == 32?
-        root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex)))
-                                    :
-        fintNextIndAfterFail(root,currentIndex);
+        if(*currentIndex+1>=value.length() || value[(*currentIndex)++] == 32) {
+            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex - 1)));
 
-        string *s = new string (value.substr(firstIndex,*currentIndex-firstIndex));
-        //SET VALUE
-        root.setValue(*s);
-        //ADD NEW VAR TO LIST
-        varList->add(*s);
+        }
+        else
+        fintNextIndAfterFail(root,value,currentIndex);
+
+
     }
         //or its a variable
     else if(value[*currentIndex] > 96 && value[*currentIndex] < 123){
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
-        *currentIndex++;
+        (*currentIndex)++;
         while (value[*currentIndex] > 96 && value[*currentIndex] < 123 && *currentIndex < value.length()-1)
-            *currentIndex++;
+            (*currentIndex)++;
 
-        value[*currentIndex++] == 32
-        ?
-        root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex)))
-        :
-        fintNextIndAfterFail(root,currentIndex);
-
-
+        if(*currentIndex+1>=value.length() || value[(*currentIndex)++] == 32) {
+            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex - 1)));
+            string *s = new string (value.substr(firstIndex,*currentIndex-firstIndex));
+            //SET VALUE
+            root.setValue(*s);
+            //ADD NEW VAR TO LIST
+            varList->add(*s);
+        }
+        else
+            fintNextIndAfterFail(root,value,currentIndex);
     }
         //OR its an operator with two variables
     else if(value[*currentIndex] == 42
@@ -60,23 +61,22 @@ bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             || value[*currentIndex] == 47
             ){
         //we just have to find where the number ends to continue
-        *currentIndex++;
+        int startIndex = (*currentIndex)++;
 
-        *currentIndex >= value.length()-1 || value[*currentIndex++] == 32
-        ?
-        root.setValue(*new string (value.substr(*currentIndex,1)))
-        :
-        fintNextIndAfterFail(root,currentIndex);
+        if(*currentIndex >= value.length()-1 || value[(*currentIndex)++] == 32){
+            root.setValue(*new string (value.substr(startIndex,1)));
+            Node* newLeft = new Node();
+            Node* newRight = new Node();
 
-        Node* newLeft = new Node();
-        Node* newRight = new Node();
-
-        root.getArgList()->add(*newLeft);
-        setupTreeHelper(currentIndex,value,*newLeft);
-        root.getArgList()->add(*newRight);
-        setupTreeHelper(currentIndex,value,*newRight);
+            root.addArg(*newLeft);
+            setupTreeHelper(currentIndex,value,*newLeft);
+            root.addArg(*newRight);
+            setupTreeHelper(currentIndex,value,*newRight);
+        }
+        else
+        fintNextIndAfterFail(root,value,currentIndex);
     }else
-        fintNextIndAfterFail(root,currentIndex);
+        fintNextIndAfterFail(root,value,currentIndex);
     return false;
 }
 
@@ -85,16 +85,13 @@ void Tree::preorderPrint() {
     cout << endl;
 }
 
-void Tree::fintNextIndAfterFail(Node &root,int* currentIndex) {
+void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     // while we have a char suggesting a missclick
+    root.setValue(*new std::string("1"));
 
-    string value = *root.getValue();
-    if (*currentIndex >= value.length()){
-        root.setValue(*new std::string("0"));
-        return;
-    }
 
-    while (value[*currentIndex] != 42
+    while (*currentIndex < value.length()
+            && value[*currentIndex] != 42
            && value[*currentIndex] != 43
            && value[*currentIndex] != 45
            && value[*currentIndex] != 47
@@ -102,14 +99,14 @@ void Tree::fintNextIndAfterFail(Node &root,int* currentIndex) {
            && !(value[*currentIndex] > 47 && value[*currentIndex] < 58)
             ){
         // we have to remove the letter (move startIndex)
-        *currentIndex++;
+        (*currentIndex)++;
     }
-    root.setValue(*new std::string("0"));
 }
 
 void Tree::preorderPrintHelper(Node *root) {
 
-    cout << root->getValue();
+    cout << *root->getValue();
+    if (!root->isArgListNULL())
     for (int i = 0; i < root->getArgList()->getElemCount(); i++)
         preorderPrintHelper(root->getArgList()->get(i));
 

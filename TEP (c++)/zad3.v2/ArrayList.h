@@ -13,12 +13,14 @@ private:
     int elemCount;
 public:
     ArrayList(){
-        arrayLength = 10;
+        arrayLength = 2;
         array = new T[arrayLength];
         elemCount = 0;
     }
-    ~ArrayList();
-    void add(T& element){
+    ~ArrayList(){
+        delete[] array;
+    }
+    void add(T element){
         elemCount++;
         if (elemCount > arrayLength) {
             arrayLength *= 2;
@@ -28,17 +30,18 @@ public:
             delete[] array;
             array = tempArray;
         }
-        array[elemCount-1] = &element;
+        array[elemCount-1] = element;
     }
     T* get(int index){
-        if (index < 0 || index >= elemCount)
+        if (index < 0 || index >= elemCount) {
             std::cout << "POZA ZAKRESEM";
-
-        return array[index];
+            std::string* exception = new std::string(" ");
+            exception[INT_MAX];
+        }
+        return &array[index];
     }
     int getElemCount(){
         return elemCount;
-
     }
 
 };
