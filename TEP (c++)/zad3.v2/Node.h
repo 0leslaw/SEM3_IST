@@ -18,6 +18,7 @@ public:
 
     Node(std::string& value);
     Node();
+    ~Node();
     string* getValue();
     void setValue(string& s);
 

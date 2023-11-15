@@ -5,7 +5,7 @@
 #include "Node.h"
 Node::Node(std::string& value) {
     this->value = &value;
-
+    argList = NULL;
 }
 // in case of new arraylist it will loop endlessly, //TODO zapytac
 Node::Node() {
@@ -35,6 +35,10 @@ void Node::addArg(Node node) {
 
 bool Node::isArgListNULL() {
     return argList == NULL;
+}
+//TODO zapytaj co tu powinno sie robic
+Node::~Node() {
+//    delete argList;
 }
 
 

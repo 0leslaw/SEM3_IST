@@ -3,7 +3,6 @@
 
 int main() {
     Tree* tree = new Tree();
-    tree->setupTree(*new string("* 2 2"));
-    tree->preorderPrint();
+    tree->setupTree(*new string("sin 144554"));
     return 0;
 }

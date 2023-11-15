@@ -43,7 +43,12 @@ public:
     int getElemCount(){
         return elemCount;
     }
-
+    void printStrings(){
+        for (int i = 0; i < elemCount; i++) {
+            std::cout<<array[i]+" ";
+        }
+        std::cout << std::endl;
+    }
 };
 
 

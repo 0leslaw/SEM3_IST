@@ -17,12 +17,13 @@ private:
     Node* root;
     ArrayList<string>* varList;
 
-    bool setupTreeHelper(int* currentIndex, std::string& value, Node& root);
+    void setupTreeHelper(int* currentIndex, std::string& value, Node& root);
     void preorderPrintHelper(Node *root);
     void fintNextIndAfterFail(Node &root,string& value, int* currentIndex);
+    void skipSpaces(string& value,int *currentIndex);
 public:
     Tree();
-    bool setupTree(std::string& value);
+    void setupTree(std::string& value);
     void preorderPrint();
 
 };

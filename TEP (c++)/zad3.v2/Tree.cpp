@@ -8,27 +8,51 @@
 // Tree stuff
 Tree::Tree() : root(NULL), varList(new ArrayList<string>()){}
 
-bool Tree::setupTree(std::string& value) {
+void Tree::setupTree(std::string& value) {
     int* currentIndex = new int(0);
     root = new Node();
-    return setupTreeHelper(currentIndex,value,*root);
+    setupTreeHelper(currentIndex,value,*root);
+    if (*currentIndex<value.length())
+        cout<<"UCIETO WYRAZENIE - ZA DUZO ARGUMENTOW"<<endl;
+    preorderPrint();
+    varList->printStrings();
 }
 //TODO czy sprawdzac wyjscie za zakres na kazdym currentIndex++
-bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
-    if (*currentIndex >= value.length())
+void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
+    skipSpaces(value,currentIndex);
+    if (*currentIndex >= value.length()) {
         root.setValue(*new string("1"));
+        cout<<"UTWORZONO SZTUCZNIE WARTOSC"<<endl;
+    }
+    else if(*currentIndex+3 < value.length() && (value.substr(*currentIndex,3) == "sin" ||
+            value.substr(*currentIndex,3) == "cos")
+    ){
+        *currentIndex += 3;
+        if(*currentIndex >= value.length() || value[*currentIndex] == 32){
+            root.setValue(*new string (value.substr(*currentIndex-3,3)));
+            Node* oneArg = new Node();
+            (*currentIndex)++;
+            setupTreeHelper(currentIndex,value,*oneArg);
+
+            root.addArg(*oneArg);
+
+            delete oneArg;
+        }
+        else
+            fintNextIndAfterFail(root,value,currentIndex);
+    }
     //current is either a constant
-    if(value[*currentIndex] > 47 && value[*currentIndex] < 58){
+    else if(value[*currentIndex] > 47 && value[*currentIndex] < 58){
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
         (*currentIndex)++;
         //FIND END OF VARIABLE CHECK IF IS A SPACE OR END, IF IS
-        while (value[*currentIndex] > 47 && value[*currentIndex] < 58 && *currentIndex < value.length()-1)
+        while (*currentIndex < value.length() && value[*currentIndex] > 47 && value[*currentIndex] < 58)
             (*currentIndex)++;
 
-        if(*currentIndex+1>=value.length() || value[(*currentIndex)++] == 32) {
-            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex - 1)));
-
+        if(*currentIndex >= value.length() || value[*currentIndex] == 32) {
+            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex)));
+            (*currentIndex)++;
         }
         else
         fintNextIndAfterFail(root,value,currentIndex);
@@ -40,11 +64,11 @@ bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
         (*currentIndex)++;
-        while (value[*currentIndex] > 96 && value[*currentIndex] < 123 && *currentIndex < value.length()-1)
+        while (*currentIndex < value.length() && value[*currentIndex] > 96 && value[*currentIndex] < 123)
             (*currentIndex)++;
 
-        if(*currentIndex+1>=value.length() || value[(*currentIndex)++] == 32) {
-            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex - 1)));
+        if(*currentIndex>=value.length() || value[*currentIndex] == 32) {
+            root.setValue(*new string(value.substr(firstIndex, *currentIndex - firstIndex)));
             string *s = new string (value.substr(firstIndex,*currentIndex-firstIndex));
             //SET VALUE
             root.setValue(*s);
@@ -68,16 +92,19 @@ bool Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             Node* newLeft = new Node();
             Node* newRight = new Node();
 
-            root.addArg(*newLeft);
             setupTreeHelper(currentIndex,value,*newLeft);
-            root.addArg(*newRight);
             setupTreeHelper(currentIndex,value,*newRight);
+
+            root.addArg(*newLeft);
+            root.addArg(*newRight);
+
+            delete newLeft;
+            delete newRight;
         }
         else
         fintNextIndAfterFail(root,value,currentIndex);
     }else
         fintNextIndAfterFail(root,value,currentIndex);
-    return false;
 }
 
 void Tree::preorderPrint() {
@@ -88,7 +115,7 @@ void Tree::preorderPrint() {
 void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     // while we have a char suggesting a missclick
     root.setValue(*new std::string("1"));
-
+    cout << "ZNALEZIONO BLAD WE WPROWADZONYM WYRAZENIU"<<endl;
 
     while (*currentIndex < value.length()
             && value[*currentIndex] != 42
@@ -104,12 +131,16 @@ void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
 }
 
 void Tree::preorderPrintHelper(Node *root) {
-
-    cout << *root->getValue();
+    string temp = *(root->getValue());
+    cout << *(root->getValue())+" ";
     if (!root->isArgListNULL())
     for (int i = 0; i < root->getArgList()->getElemCount(); i++)
         preorderPrintHelper(root->getArgList()->get(i));
+}
 
+void Tree::skipSpaces(string &value,int *currentIndex) {
+    while (value[*currentIndex] == 32)
+        (*currentIndex)++;
 }
 
 
