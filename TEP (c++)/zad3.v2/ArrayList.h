@@ -17,6 +17,13 @@ public:
         array = new T[arrayLength];
         elemCount = 0;
     }
+    ArrayList(ArrayList<T> &other){
+        arrayLength = other.getArrayLength();
+        array = new T[arrayLength];
+        elemCount = other.getElemCount();
+        for (int i = 0; i < elemCount; i++)
+            array[i] = new T(*other.getArray().get(i));
+    }
     ~ArrayList(){
         delete[] array;
     }
@@ -48,6 +55,14 @@ public:
             std::cout<<array[i]+" ";
         }
         std::cout << std::endl;
+    }
+
+    T *getArray() const {
+        return array;
+    }
+
+    int getArrayLength() const {
+        return arrayLength;
     }
 };
 

@@ -12,7 +12,7 @@ using namespace std;
 
 class Node {
 private:
-    std::string* value;
+    std::string value;
     ArrayList<Node>* argList;
 public:
 
@@ -20,7 +20,7 @@ public:
     Node();
     Node(const Node& other);
     ~Node();
-    string* getValue() const;
+    string getValue() const;
     void setValue(string& s);
 
     ArrayList<Node> *getArgList() const;

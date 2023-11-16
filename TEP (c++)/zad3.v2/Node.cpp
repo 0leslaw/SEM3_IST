@@ -4,22 +4,21 @@
 
 #include "Node.h"
 Node::Node(std::string& value) {
-    this->value = &value;
+    this->value = value;
     argList = NULL;
 }
 // in case of new arraylist it will loop endlessly, //TODO zapytac
 Node::Node() {
-    this->value = NULL;
     argList = NULL;
 }
 
 
 void Node::setValue(std::string &s) {
-    value = &s;
+    value = s;
 }
 
 
-string *Node::getValue() const{
+string Node::getValue() const{
     return value;
 }
 
@@ -38,15 +37,19 @@ bool Node::isArgListNULL() {
 }
 //TODO zapytaj co tu powinno sie robic
 Node::~Node() {
-//    delete argList;
+//    if(!isArgListNULL())
+//        delete argList;
+//    if(value != NULL)
+//        delete value;
 }
 
 Node::Node(const Node &other) {
-    value = new string(*other.getValue());
+    //TODO czy spowoduje mem leak gdy value jest static
+    value = *new string(other.getValue());
     if(other.getArgList() != NULL)
     for (int i = 0; i < other.getArgList()->getElemCount(); i++)
-        argList->add(*new Node(*other.getArgList()->get(i)));
-
+        this->addArg(*new Node(*other.getArgList()->get(i)));
+    else argList = NULL;
 }
 
 

@@ -108,7 +108,7 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
 }
 
 void Tree::preorderPrint() {
-    preorderPrintHelper(root);
+    preorderPrintHelper(*root);
     cout << endl;
 }
 
@@ -130,12 +130,11 @@ void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     }
 }
 
-void Tree::preorderPrintHelper(Node *root) {
-    string temp = *(root->getValue());
-    cout << *(root->getValue())+" ";
-    if (!root->isArgListNULL())
-    for (int i = 0; i < root->getArgList()->getElemCount(); i++)
-        preorderPrintHelper(root->getArgList()->get(i));
+void Tree::preorderPrintHelper(Node &root) {
+    cout << (root.getValue())+" ";
+    if (!root.isArgListNULL())
+    for (int i = 0; i < root.getArgList()->getElemCount(); i++)
+        preorderPrintHelper(*root.getArgList()->get(i));
 }
 
 void Tree::skipSpaces(string &value,int *currentIndex) {
@@ -144,7 +143,11 @@ void Tree::skipSpaces(string &value,int *currentIndex) {
 }
 
 void Tree::computeForSetParameters(ArrayList<int> &parameterSet) {
+    if (parameterSet.getElemCount() != varList->getElemCount())
+        cout<<"ZLA ILOSC PARARMETROW";
+    else{
 
+    }
 }
 
 void Tree::joinTreeWithThis(string &value) {
@@ -181,7 +184,7 @@ Tree &Tree::operator+(const Tree &other) {
         currentRoot = currentRoot->getArgList()->get(0);
 
     for (int i = 0; i < temp.getVarList().getElemCount(); i++) {
-        varList->add(*temp.getVarList().get(i));
+        this->addVariable(*temp.getVarList().get(i));
     }
     currentRoot->addArg(*temp.getRoot());
     return temp;
@@ -197,6 +200,12 @@ Tree::Tree(const Tree &other) {
 
 ArrayList<string> &Tree::getVarListConst() const {
     return *varList;
+}
+
+void Tree::addVariable(string &value) {
+    if (varList == NULL)
+        varList = new ArrayList<string>();
+    varList->add(value);
 }
 
 

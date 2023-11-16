@@ -18,9 +18,10 @@ private:
     ArrayList<string>* varList;
 
     void setupTreeHelper(int* currentIndex, std::string& value, Node& root);
-    void preorderPrintHelper(Node *root);
+    void preorderPrintHelper(Node &root);
     void fintNextIndAfterFail(Node &root,string& value, int* currentIndex);
     void skipSpaces(string& value,int *currentIndex);
+    void addVariable(string& value);
 public:
     Tree();
     Tree& operator+(const Tree& other);
