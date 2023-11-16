@@ -18,11 +18,12 @@ public:
 
     Node(std::string& value);
     Node();
+    Node(const Node& other);
     ~Node();
-    string* getValue();
+    string* getValue() const;
     void setValue(string& s);
 
-    ArrayList<Node> *getArgList();
+    ArrayList<Node> *getArgList() const;
     void addArg(Node node);
     bool isArgListNULL();
 };

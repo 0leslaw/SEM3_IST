@@ -23,9 +23,20 @@ private:
     void skipSpaces(string& value,int *currentIndex);
 public:
     Tree();
+    Tree& operator+(const Tree& other);
+    Tree& operator=(const Tree& other);
+    Tree(const Tree& other);
     void setupTree(std::string& value);
     void preorderPrint();
+    void computeForSetParameters(ArrayList<int>& parameterSet);
+    void joinTreeWithThis(string &value);
+    ArrayList<string>& getVarList();
+    ArrayList<string>& getVarListConst()const;
 
+
+    Node *getRoot() const;
+
+    void setRoot(Node *root);
 };
 
 

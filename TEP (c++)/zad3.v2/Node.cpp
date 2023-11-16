@@ -19,11 +19,11 @@ void Node::setValue(std::string &s) {
 }
 
 
-string *Node::getValue() {
+string *Node::getValue() const{
     return value;
 }
 
-ArrayList<Node> *Node::getArgList() {
+ArrayList<Node> *Node::getArgList() const{
     return argList;
 }
 
@@ -39,6 +39,14 @@ bool Node::isArgListNULL() {
 //TODO zapytaj co tu powinno sie robic
 Node::~Node() {
 //    delete argList;
+}
+
+Node::Node(const Node &other) {
+    value = new string(*other.getValue());
+    if(other.getArgList() != NULL)
+    for (int i = 0; i < other.getArgList()->getElemCount(); i++)
+        argList->add(*new Node(*other.getArgList()->get(i)));
+
 }
 
 

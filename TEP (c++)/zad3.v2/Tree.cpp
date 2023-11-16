@@ -143,4 +143,60 @@ void Tree::skipSpaces(string &value,int *currentIndex) {
         (*currentIndex)++;
 }
 
+void Tree::computeForSetParameters(ArrayList<int> &parameterSet) {
+
+}
+
+void Tree::joinTreeWithThis(string &value) {
+    //find any leaf
+    Node* currentRoot = this->root;
+    while (!currentRoot->isArgListNULL())
+        currentRoot = currentRoot->getArgList()->get(0);
+
+    Tree temp = *new Tree();
+    temp.setupTree(value);
+    for (int i = 0; i < temp.getVarList().getElemCount(); i++) {
+        varList->add(*temp.getVarList().get(i));
+    }
+    currentRoot->addArg(*temp.getRoot());
+}
+
+ArrayList<string> &Tree::getVarList() {
+    return *varList;
+}
+
+Node *Tree::getRoot() const{
+    return root;
+}
+
+void Tree::setRoot(Node *root) {
+    Tree::root = root;
+}
+
+Tree &Tree::operator+(const Tree &other) {
+    Tree temp = *new Tree();
+    //find any leaf
+    Node* currentRoot = this->root;
+    while (!currentRoot->isArgListNULL())
+        currentRoot = currentRoot->getArgList()->get(0);
+
+    for (int i = 0; i < temp.getVarList().getElemCount(); i++) {
+        varList->add(*temp.getVarList().get(i));
+    }
+    currentRoot->addArg(*temp.getRoot());
+    return temp;
+}
+
+Tree &Tree::operator=(const Tree &other) {
+    return *this;
+}
+
+Tree::Tree(const Tree &other) {
+    root = new Node(*other.getRoot());
+}
+
+ArrayList<string> &Tree::getVarListConst() const {
+    return *varList;
+}
+
 
