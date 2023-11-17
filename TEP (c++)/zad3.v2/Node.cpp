@@ -26,7 +26,7 @@ ArrayList<Node> *Node::getArgList() const{
     return argList;
 }
 
-void Node::addArg(Node node) {
+void Node::addArg(const Node& node) {
     if(argList == NULL)
         argList = new ArrayList<Node>();
     argList->add(node);
@@ -37,10 +37,8 @@ bool Node::isArgListNULL() {
 }
 //TODO zapytaj co tu powinno sie robic
 Node::~Node() {
-//    if(!isArgListNULL())
-//        delete argList;
-//    if(value != NULL)
-//        delete value;
+    if(!isArgListNULL())
+        delete argList;
 }
 
 Node::Node(const Node &other) {

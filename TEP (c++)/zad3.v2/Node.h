@@ -24,7 +24,7 @@ public:
     void setValue(string& s);
 
     ArrayList<Node> *getArgList() const;
-    void addArg(Node node);
+    void addArg(const Node& node);
     bool isArgListNULL();
 };
 

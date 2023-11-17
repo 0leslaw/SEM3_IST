@@ -134,7 +134,7 @@ void Tree::preorderPrintHelper(Node &root) {
     cout << (root.getValue())+" ";
     if (!root.isArgListNULL())
     for (int i = 0; i < root.getArgList()->getElemCount(); i++)
-        preorderPrintHelper(*root.getArgList()->get(i));
+        preorderPrintHelper(*(root.getArgList()->get(i)));
 }
 
 void Tree::skipSpaces(string &value,int *currentIndex) {
