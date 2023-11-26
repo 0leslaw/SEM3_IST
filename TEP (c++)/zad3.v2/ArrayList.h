@@ -4,7 +4,7 @@
 
 #ifndef ZAD3_V2_ARRAYLIST_H
 #define ZAD3_V2_ARRAYLIST_H
-
+#include <iostream>
 template <class T>
 class ArrayList {
 private:
@@ -12,43 +12,55 @@ private:
     int arrayLength;
     int elemCount;
     void clear() {
-        for (int i = 0; i < arrayLength; i++)
+        for (int i = 0; i < arrayLength; i++) {
             delete array[i];
-
+            array[i] = NULL;
+        }
         arrayLength = 0;
     }
 public:
     ArrayList(){
-        arrayLength = 2;
-        array = new T*[arrayLength];
+        arrayLength = 0;
+        array = NULL;
         elemCount = 0;
     }
-    ArrayList(ArrayList<T> &other){
-        arrayLength = other.getArrayLength();
-        array = new T*[arrayLength];
+    ArrayList(const ArrayList<T> &other){
         elemCount = other.getElemCount();
-        for (int i = 0; i < elemCount; i++)
-            array[i] = new T(*other.getArray().get(i));
+        if (arrayLength == 0){
+            array = NULL;
+        }
+        else {
+            arrayLength = other.getArrayLength();
+            array = new T *[arrayLength];
+            for (int i = 0; i < elemCount; i++)
+                array[i] = new T(*other.getArray().get(i));
+        }
     }
     ~ArrayList(){
-        clear();
-        delete[] array;
+        if(arrayLength != 0) {
+            clear();
+            delete[] array;
+        }
     }
     void add(T& element){
         elemCount++;
         if (elemCount > arrayLength) {
+            arrayLength++;
             arrayLength *= 2;
             T **tempArray = new T*[arrayLength];
-            for (int i = 0; i < elemCount; i++)
-                tempArray[i] = array[i];
-
-            clear();
-            delete[] array;
+            if (array != NULL) {
+                for (int i = 0; i < elemCount-1; i++)
+                    tempArray[i] = array[i];
+                delete[] array;
+            }
             array = tempArray;
         }
         array[elemCount-1] = &element;
     }
-
+    void setAt(int index, T& element){
+        delete array[index];
+        array[index] = &element;
+    }
     T* get(int index){
         if (index < 0 || index >= elemCount) {
             std::cout << "POZA ZAKRESEM";
@@ -59,12 +71,6 @@ public:
     }
     int getElemCount(){
         return elemCount;
-    }
-    void printStrings(){
-        for (int i = 0; i < elemCount; i++) {
-            std::cout<<*array[i]+" ";
-        }
-        std::cout << std::endl;
     }
 
     T **getArray() const {

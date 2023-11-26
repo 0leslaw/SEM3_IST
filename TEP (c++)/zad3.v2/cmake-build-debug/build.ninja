@@ -61,12 +61,6 @@ build CMakeFiles/zad3_v2.dir/Tree.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users
   OBJECT_DIR = CMakeFiles\zad3_v2.dir
   OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
 
-build CMakeFiles/zad3_v2.dir/Node.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/Node.cpp || cmake_object_order_depends_target_zad3_v2
-  DEP_FILE = CMakeFiles\zad3_v2.dir\Node.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++98
-  OBJECT_DIR = CMakeFiles\zad3_v2.dir
-  OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
-
 build CMakeFiles/zad3_v2.dir/ArrayList.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/ArrayList.cpp || cmake_object_order_depends_target_zad3_v2
   DEP_FILE = CMakeFiles\zad3_v2.dir\ArrayList.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu++98
@@ -81,7 +75,7 @@ build CMakeFiles/zad3_v2.dir/ArrayList.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/
 #############################################
 # Link the executable zad3_v2.exe
 
-build zad3_v2.exe: CXX_EXECUTABLE_LINKER__zad3_v2_Debug CMakeFiles/zad3_v2.dir/main.cpp.obj CMakeFiles/zad3_v2.dir/Tree.cpp.obj CMakeFiles/zad3_v2.dir/Node.cpp.obj CMakeFiles/zad3_v2.dir/ArrayList.cpp.obj
+build zad3_v2.exe: CXX_EXECUTABLE_LINKER__zad3_v2_Debug CMakeFiles/zad3_v2.dir/main.cpp.obj CMakeFiles/zad3_v2.dir/Tree.cpp.obj CMakeFiles/zad3_v2.dir/ArrayList.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\zad3_v2.dir

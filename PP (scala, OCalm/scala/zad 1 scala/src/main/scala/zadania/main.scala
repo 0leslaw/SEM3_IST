@@ -18,6 +18,12 @@ object main {
     println(Zad6.listLenth(List("a","b","b","a")))
 
     println(zad7.solveInd(0.3)(256))
+
+
+
+
+    println(Laby3XD.cutEnds(List("a","b","b","a","a","b","b","a")))
+    println(Laby3XD.groupElementsInto_valueCount_pairs(List("a","b","b","a","a","b","b","a")))
   }
 
 }

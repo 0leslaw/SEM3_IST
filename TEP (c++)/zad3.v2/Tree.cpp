@@ -3,19 +3,19 @@
 //
 
 #include "Tree.h"
-#include "Node.h"
-
+#include <iostream>
 // Tree stuff
-Tree::Tree() : root(NULL), varList(new ArrayList<string>()){}
+Tree::Tree() : treeRoot(NULL), varList(new ArrayList<string>()){}
 
 void Tree::setupTree(std::string& value) {
     int* currentIndex = new int(0);
-    root = new Node();
-    setupTreeHelper(currentIndex,value,*root);
+    treeRoot = new Node();
+    setupTreeHelper(currentIndex,value,*treeRoot);
     if (*currentIndex<value.length())
         cout<<"UCIETO WYRAZENIE - ZA DUZO ARGUMENTOW"<<endl;
     preorderPrint();
-    varList->printStrings();
+    printVars();
+    delete currentIndex;
 }
 //TODO czy sprawdzac wyjscie za zakres na kazdym currentIndex++
 void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
@@ -24,9 +24,7 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
         root.setValue(*new string("1"));
         cout<<"UTWORZONO SZTUCZNIE WARTOSC"<<endl;
     }
-    else if(*currentIndex+3 < value.length() && (value.substr(*currentIndex,3) == "sin" ||
-            value.substr(*currentIndex,3) == "cos")
-    ){
+    else if(isNextTrygon(currentIndex,value)){
         *currentIndex += 3;
         if(*currentIndex >= value.length() || value[*currentIndex] == 32){
             root.setValue(*new string (value.substr(*currentIndex-3,3)));
@@ -35,18 +33,16 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             setupTreeHelper(currentIndex,value,*oneArg);
 
             root.addArg(*oneArg);
-
-            delete oneArg;
         }
         else
             fintNextIndAfterFail(root,value,currentIndex);
     }
     //current is either a constant
-    else if(value[*currentIndex] > 47 && value[*currentIndex] < 58){
+    else if(isNextNumber(currentIndex,value)){
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
         (*currentIndex)++;
-        //FIND END OF VARIABLE CHECK IF IS A SPACE OR END, IF IS
+        //FIND END OF NUMBER CHECK IF IS A SPACE OR END, IF IS
         while (*currentIndex < value.length() && value[*currentIndex] > 47 && value[*currentIndex] < 58)
             (*currentIndex)++;
 
@@ -60,7 +56,7 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
 
     }
         //or its a variable
-    else if(value[*currentIndex] > 96 && value[*currentIndex] < 123){
+    else if(isNextVar(currentIndex,value)){
         //we just have to find where the number ends to continue
         int firstIndex = *currentIndex;
         (*currentIndex)++;
@@ -79,12 +75,8 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             fintNextIndAfterFail(root,value,currentIndex);
     }
         //OR its an operator with two variables
-    else if(value[*currentIndex] == 42
-            || value[*currentIndex] == 43
-            || value[*currentIndex] == 45
-            || value[*currentIndex] == 47
-            ){
-        //we just have to find where the number ends to continue
+    else if(isNextOperator(currentIndex,value)){
+        //we just have to find where it ends to continue
         int startIndex = (*currentIndex)++;
 
         if(*currentIndex >= value.length()-1 || value[(*currentIndex)++] == 32){
@@ -92,24 +84,17 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             Node* newLeft = new Node();
             Node* newRight = new Node();
 
-            setupTreeHelper(currentIndex,value,*newLeft);
-            setupTreeHelper(currentIndex,value,*newRight);
-
             root.addArg(*newLeft);
             root.addArg(*newRight);
 
-            delete newLeft;
-            delete newRight;
+            setupTreeHelper(currentIndex,value,*newLeft);
+            setupTreeHelper(currentIndex,value,*newRight);
+
         }
         else
         fintNextIndAfterFail(root,value,currentIndex);
     }else
         fintNextIndAfterFail(root,value,currentIndex);
-}
-
-void Tree::preorderPrint() {
-    preorderPrintHelper(*root);
-    cout << endl;
 }
 
 void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
@@ -118,7 +103,7 @@ void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     cout << "ZNALEZIONO BLAD WE WPROWADZONYM WYRAZENIU"<<endl;
 
     while (*currentIndex < value.length()
-            && value[*currentIndex] != 42
+           && value[*currentIndex] != 42
            && value[*currentIndex] != 43
            && value[*currentIndex] != 45
            && value[*currentIndex] != 47
@@ -130,16 +115,21 @@ void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     }
 }
 
-void Tree::preorderPrintHelper(Node &root) {
-    cout << (root.getValue())+" ";
-    if (!root.isArgListNULL())
-    for (int i = 0; i < root.getArgList()->getElemCount(); i++)
-        preorderPrintHelper(*(root.getArgList()->get(i)));
-}
-
 void Tree::skipSpaces(string &value,int *currentIndex) {
     while (value[*currentIndex] == 32)
         (*currentIndex)++;
+}
+
+void Tree::preorderPrint() {
+    preorderPrintHelper(*treeRoot);
+    cout << endl;
+}
+
+void Tree::preorderPrintHelper(Node &root) {
+    cout << (root.getValue())+"; ";
+    if (!root.isArgListNULLorEmpty())
+        for (int i = 0; i < root.argCount(); i++)
+            preorderPrintHelper(*(root.getArgAt(i)));
 }
 
 void Tree::computeForSetParameters(ArrayList<int> &parameterSet) {
@@ -152,50 +142,74 @@ void Tree::computeForSetParameters(ArrayList<int> &parameterSet) {
 
 void Tree::joinTreeWithThis(string &value) {
     //find any leaf
-    Node* currentRoot = this->root;
-    while (!currentRoot->isArgListNULL())
-        currentRoot = currentRoot->getArgList()->get(0);
+    Tree* temp = new Tree();
+    temp->setupTree(value);
 
-    Tree temp = *new Tree();
-    temp.setupTree(value);
-    for (int i = 0; i < temp.getVarList().getElemCount(); i++) {
-        varList->add(*temp.getVarList().get(i));
+    if (treeRoot == NULL || treeRoot->isArgListNULLorEmpty()){
+        delete treeRoot;
+        treeRoot = temp->getRoot();
     }
-    currentRoot->addArg(*temp.getRoot());
+    else {
+        Node* currentRoot = treeRoot;
+        while (!currentRoot->getArgAt(0)->isArgListNULLorEmpty())
+            currentRoot = currentRoot->getArgAt(0);
+        currentRoot->getArgList()->setAt(0,*temp->getRoot());
+    }
+    if (!isVarListNULLorEmpty()){
+        for (int i = 0; i < temp->getVarListConst().getElemCount(); i++)
+            varList->add(*new string(*temp->getVarListConst().get(i)));
+        }
 }
 
-ArrayList<string> &Tree::getVarList() {
-    return *varList;
+ArrayList<string> *Tree::getVarList() {
+    return varList;
 }
 
 Node *Tree::getRoot() const{
-    return root;
+    return treeRoot;
 }
 
-void Tree::setRoot(Node *root) {
-    Tree::root = root;
+void Tree::setRoot(Node *newRoot) {
+    treeRoot = newRoot;
 }
 
-Tree &Tree::operator+(const Tree &other) {
+Tree Tree::operator+(const Tree &other) {
     Tree temp = *new Tree();
     //find any leaf
-    Node* currentRoot = this->root;
-    while (!currentRoot->isArgListNULL())
+    Node* currentRoot = this->treeRoot;
+    while (!currentRoot->isArgListNULLorEmpty())
         currentRoot = currentRoot->getArgList()->get(0);
 
-    for (int i = 0; i < temp.getVarList().getElemCount(); i++) {
-        this->addVariable(*temp.getVarList().get(i));
+    for (int i = 0; i < temp.getVarList()->getElemCount(); i++) {
+        temp.addVariable(*new string(*other.getVarListConst().get(i)));
     }
-    currentRoot->addArg(*temp.getRoot());
+    currentRoot->addArg(*(new Tree(other))->getRoot());
     return temp;
 }
 
-Tree &Tree::operator=(const Tree &other) {
-    return *this;
-}
+//Tree &Tree::operator=(Tree &other) {
+//    if(this == &other)
+//        return *this;
+//    varList = new ArrayList<string>();
+//    for (int i = 0; i < other.getVarList()->getElemCount(); i++)
+//        varList->add(*new string(*other.getVarList()->get(i)));
+//    treeRoot = new Node(*other.getRoot());
+//    return *this;
+//}
 
 Tree::Tree(const Tree &other) {
-    root = new Node(*other.getRoot());
+    varList = NULL;
+    if (other.getRoot() == NULL){
+        treeRoot = NULL;
+        return;
+    }
+    treeRoot = new Node(*other.getRoot());
+    if (!other.isVarListNULLorEmpty())
+        for (int i = 0; i < other.getVarListConst().getElemCount(); i++) {
+            varList->add(*new string(*other.getVarListConst().get(i)));
+
+    }
+    preorderPrint();
 }
 
 ArrayList<string> &Tree::getVarListConst() const {
@@ -208,4 +222,36 @@ void Tree::addVariable(string &value) {
     varList->add(value);
 }
 
+bool Tree::isNextTrygon(const int *currentIndex, string &value) {
+    return *currentIndex+3 < value.length() &&  (value.substr(*currentIndex,3) == "sin" ||
+                                                value.substr(*currentIndex,3) == "cos");
+}
+
+bool Tree::isNextOperator(const int *currentIndex, string &value) {
+    return value[*currentIndex] == 42
+           || value[*currentIndex] == 43
+           || value[*currentIndex] == 45
+           || value[*currentIndex] == 47;
+}
+
+bool Tree::isNextNumber(const int *currentIndex, string &value) {
+    return value[*currentIndex] > 47 && value[*currentIndex] < 58;
+}
+
+bool Tree::isNextVar(const int *currentIndex, string &value) {
+    return value[*currentIndex] > 96 && value[*currentIndex] < 123;
+}
+void Tree::printVars(){
+    if (!isVarListNULLorEmpty()) {
+        for (int i = 0; i < varList->getElemCount(); i++) {
+            std::cout << *varList->get(i) + " ";
+        }
+        std::cout << std::endl;
+    }else
+        std::cout << "BRAK ZMIENNYCH" << std::endl;
+}
+
+bool Tree::isVarListNULLorEmpty() const{
+    return varList == NULL || varList->getElemCount() == 0;
+}
 

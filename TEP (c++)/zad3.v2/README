@@ -1,0 +1,35 @@
+ROZWIĄZANE PROBLEMY
+
+PRZY ZALOZENIU ZE ARGLIST MOZE BYC NULL PROBUJE ODCZYTAC JEJ PRYWATNE POLE
+    int argCount() const{
+        return argList->getElemCount();
+    }
+    bool isArgListNULL() {
+        return argCount() == 0;
+    }
+
+CIEKAWSZY PRZYPADEK
+PRZY KOPIOWANIU NODE POLE KOPII 'ARGLIST' DOMYSLNIE USTAWIALO SIE NA
+COS W RODZAJU DOMYSLNEJ WARTOSCI I "ADDARG" RZUCAL SIGSEGV PONIEWAZ
+LISTA ANI NIE BYLA NULL I PRZECHODZILA PRZEZ IF(ARGLIST==NULL)
+ANI NIE MOGLA SIE POPRAWNIE DODAC BO NIE BYLA ZINICJALIZOWANA
+
+Z TEGO
+    Node(const Node &other) {
+        value = other.getValue()+ "_copy";
+        cout<<value<<endl;
+
+        if(other.getArgList() != NULL)
+            for (int i = 0; i < other.argCount(); i++)
+                this->addArg(*new Node(*other.getArgList()->get(i)));
+        else argList = NULL;
+    }
+DO TEGO
+    Node(const Node &other) {
+        value = other.getValue()+ "_copy";
+        cout<<value<<endl;
+        argList = NULL;
+        if(other.getArgList() != NULL)
+            for (int i = 0; i < other.argCount(); i++)
+                this->addArg(*new Node(*other.getArgList()->get(i)));
+    }
