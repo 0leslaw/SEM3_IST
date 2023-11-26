@@ -5,10 +5,13 @@ int main() {
     Tree* tree = new Tree();
     string *s = new string("sin * 10230");
     tree->setupTree(*s);
-    Tree tree1 = *new Tree(*tree);
+    Tree tree1(*tree);
     tree1.preorderPrint();
-    tree->joinTreeWithThis(*s);
-    tree->preorderPrint();
+    tree1.joinTreeWithThis(*s);
+    tree1.preorderPrint();
+
+    Tree tree2 = *tree + tree1;
+
 //    tree->preorderPrint();
 //    std::string userInput;
 //

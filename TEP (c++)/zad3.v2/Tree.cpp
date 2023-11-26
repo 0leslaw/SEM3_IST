@@ -174,17 +174,24 @@ void Tree::setRoot(Node *newRoot) {
 }
 
 Tree Tree::operator+(const Tree &other) {
-    Tree temp = *new Tree();
     //find any leaf
-    Node* currentRoot = this->treeRoot;
-    while (!currentRoot->isArgListNULLorEmpty())
-        currentRoot = currentRoot->getArgList()->get(0);
-
-    for (int i = 0; i < temp.getVarList()->getElemCount(); i++) {
-        temp.addVariable(*new string(*other.getVarListConst().get(i)));
+    Tree tempThis(*this);
+    Tree* tempOther = new Tree(other);
+    if (treeRoot == NULL || treeRoot->isArgListNULLorEmpty()){
+        delete tempThis.getRoot();
+        tempThis.setRoot(tempOther->getRoot());
     }
-    currentRoot->addArg(*(new Tree(other))->getRoot());
-    return temp;
+    else {
+        Node* currentRoot = tempThis.getRoot();
+        while (!currentRoot->getArgAt(0)->isArgListNULLorEmpty())
+            currentRoot = currentRoot->getArgAt(0);
+        currentRoot->getArgList()->setAt(0,*tempOther->getRoot());
+    }
+    if (!tempOther->isVarListNULLorEmpty()){
+        for (int i = 0; i < tempThis.getVarListConst().getElemCount(); i++)
+            tempThis.getVarList()->add(*new string(*tempThis.getVarListConst().get(i)));
+    }
+    return Tree(tempThis);
 }
 
 //Tree &Tree::operator=(Tree &other) {
@@ -253,5 +260,11 @@ void Tree::printVars(){
 
 bool Tree::isVarListNULLorEmpty() const{
     return varList == NULL || varList->getElemCount() == 0;
+}
+
+Tree::~Tree() {
+    cout<< "Usunięto drzewo: "+treeRoot->getValue()+"MÓJ PANIE!"<<endl;
+    delete treeRoot;
+    delete varList;
 }
 

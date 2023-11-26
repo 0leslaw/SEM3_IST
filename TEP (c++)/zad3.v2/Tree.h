@@ -60,6 +60,7 @@ public:
     }
 //TODO zapytaj co tu powinno sie robic
     ~Node() {
+        cout<< "Usunieto node: "+value+" Moj panie!"<<endl;
         if(argList != NULL)
             delete argList;
     }
@@ -86,7 +87,7 @@ public:
     Tree operator+(const Tree& other);
     Tree& operator=(const Tree& other);
     Tree(const Tree& other);
-    ~T
+    ~Tree();
     void setupTree(std::string& value);
     void preorderPrint();
     void computeForSetParameters(ArrayList<int>& parameterSet);
