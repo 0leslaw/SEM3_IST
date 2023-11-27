@@ -4,6 +4,8 @@
 
 #include "Tree.h"
 #include <iostream>
+#include <cstdlib>
+#include <cmath>
 // Tree stuff
 Tree::Tree() : treeRoot(NULL), varList(new ArrayList<string>()){}
 
@@ -69,7 +71,8 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
             //SET VALUE
             root.setValue(*s);
             //ADD NEW VAR TO LIST
-            varList->add(*s);
+            if (!varList->contains(*s))
+                addVariable(*s);
         }
         else
             fintNextIndAfterFail(root,value,currentIndex);
@@ -132,33 +135,61 @@ void Tree::preorderPrintHelper(Node &root) {
             preorderPrintHelper(*(root.getArgAt(i)));
 }
 
-void Tree::computeForSetParameters(ArrayList<int> &parameterSet) {
-    if (parameterSet.getElemCount() != varList->getElemCount())
-        cout<<"ZLA ILOSC PARARMETROW";
-    else{
-
+double Tree::computeForSetParameters(const ArrayList<int> &parameterSet) {
+    if (parameterSet.getElemCount() != varList->getElemCount()) {
+        cout << "ZLA ILOSC PARARMETROW";
+        return -1;
     }
+    else{
+        return computeHelper(parameterSet,*treeRoot);
+    }
+}
+double Tree::computeHelper(const ArrayList<int> &parameterSet, Node &root) {
+    //operators
+    // *
+    if(root.value[0] == 42)
+        return computeHelper(parameterSet,*root.getArgAt(0)) *
+        computeHelper(parameterSet,*root.getArgAt(1));
+    // +
+    if(root.value[0] == 43)
+        return computeHelper(parameterSet,*root.getArgAt(0)) +
+               computeHelper(parameterSet,*root.getArgAt(1));
+    // -
+    if(root.value[0] == 45)
+        return computeHelper(parameterSet,*root.getArgAt(0)) -
+               computeHelper(parameterSet,*root.getArgAt(1));
+    // /
+    if(root.value[0] == 47)
+        return computeHelper(parameterSet,*root.getArgAt(0)) /
+               computeHelper(parameterSet,*root.getArgAt(1));
+    //num
+    if(root.value[0] > 47 && root.value[0] < 58)
+        return std::atoi(root.value.c_str());
+    //var
+    if(root.value[0] > 92 && root.value[0] < 123){
+        int* i = new int(0);
+        //TODO TU COS SIE WALI
+        while(*i < varList->getElemCount()) {
+            if (*varList->get(*i) == root.value)
+                break;
+            (*i)++;
+        }
+        int ii = *i;
+        delete i;
+        return *parameterSet.get(ii);
+    }
+    else if (root.value == "sin"){
+        return sin(computeHelper(parameterSet,*root.getArgAt(0)));
+    }
+    else if (root.value == "cos"){
+        return cos(computeHelper(parameterSet,*root.getArgAt(0)));
+    }
+    else return false;
 }
 
 void Tree::joinTreeWithThis(string &value) {
-    //find any leaf
-    Tree* temp = new Tree();
-    temp->setupTree(value);
-
-    if (treeRoot == NULL || treeRoot->isArgListNULLorEmpty()){
-        delete treeRoot;
-        treeRoot = temp->getRoot();
-    }
-    else {
-        Node* currentRoot = treeRoot;
-        while (!currentRoot->getArgAt(0)->isArgListNULLorEmpty())
-            currentRoot = currentRoot->getArgAt(0);
-        currentRoot->getArgList()->setAt(0,*temp->getRoot());
-    }
-    if (!isVarListNULLorEmpty()){
-        for (int i = 0; i < temp->getVarListConst().getElemCount(); i++)
-            varList->add(*new string(*temp->getVarListConst().get(i)));
-        }
+    *this =*this + Tree(value);
+    preorderPrint();
 }
 
 ArrayList<string> *Tree::getVarList() {
@@ -191,7 +222,7 @@ Tree Tree::operator+(const Tree &other) {
         for (int i = 0; i < tempThis.getVarListConst().getElemCount(); i++)
             tempThis.getVarList()->add(*new string(*tempThis.getVarListConst().get(i)));
     }
-    return Tree(tempThis);
+    return tempThis;
 }
 
 //Tree &Tree::operator=(Tree &other) {
@@ -205,7 +236,7 @@ Tree Tree::operator+(const Tree &other) {
 //}
 
 Tree::Tree(const Tree &other) {
-    varList = NULL;
+    varList = new ArrayList<string>();
     if (other.getRoot() == NULL){
         treeRoot = NULL;
         return;
@@ -250,6 +281,7 @@ bool Tree::isNextVar(const int *currentIndex, string &value) {
 }
 void Tree::printVars(){
     if (!isVarListNULLorEmpty()) {
+        std::cout << "lista zmiennych:\n";
         for (int i = 0; i < varList->getElemCount(); i++) {
             std::cout << *varList->get(i) + " ";
         }
@@ -267,4 +299,26 @@ Tree::~Tree() {
     delete treeRoot;
     delete varList;
 }
+
+Tree::Tree(string &value) {
+    treeRoot = NULL;
+    varList = new ArrayList<string>();
+    setupTree(value);
+}
+
+Tree &Tree::operator=(const Tree &other) {
+    if (this != &other){
+        delete varList;
+        delete treeRoot;
+        varList = NULL;
+        treeRoot = NULL;
+        if (!other.isVarListNULLorEmpty())
+            varList = new ArrayList<string>(other.getVarListConst());
+        if (other.getRoot() != NULL)
+            treeRoot = new Node(*other.getRoot());
+    }else
+        return *this;
+}
+
+
 

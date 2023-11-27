@@ -25,8 +25,7 @@ public:
         argList = NULL;
     }
     Node(const Node &other) {
-        value = other.getValue()+ "_copy";
-        cout<<value<<endl;
+        value = other.getValue();
         argList = NULL;
         if(other.getArgList() != NULL)
             for (int i = 0; i < other.argCount(); i++)
@@ -84,13 +83,15 @@ private:
     static bool isNextVar(const int *currentIndex, std::string &value);
 public:
     Tree();
+    Tree(string& value);
     Tree operator+(const Tree& other);
     Tree& operator=(const Tree& other);
     Tree(const Tree& other);
     ~Tree();
     void setupTree(std::string& value);
     void preorderPrint();
-    void computeForSetParameters(ArrayList<int>& parameterSet);
+    double computeForSetParameters(const ArrayList<int>& parameterSet);
+    double computeHelper(const ArrayList<int>& parameterSet, Node& root);
     void joinTreeWithThis(string &value);
     ArrayList<string>* getVarList();
     ArrayList<string>& getVarListConst()const;

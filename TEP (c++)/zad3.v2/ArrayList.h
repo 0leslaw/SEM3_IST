@@ -12,7 +12,7 @@ private:
     int arrayLength;
     int elemCount;
     void clear() {
-        for (int i = 0; i < arrayLength; i++) {
+        for (int i = 0; i < elemCount; i++) {
             delete array[i];
             array[i] = NULL;
         }
@@ -33,7 +33,7 @@ public:
             arrayLength = other.getArrayLength();
             array = new T *[arrayLength];
             for (int i = 0; i < elemCount; i++)
-                array[i] = new T(*other.getArray().get(i));
+                array[i] = new T(*other.getArray()[i]);
         }
     }
     ~ArrayList(){
@@ -61,7 +61,19 @@ public:
         delete array[index];
         array[index] = &element;
     }
-    T* get(int index){
+    bool contains(T& element){
+        for (int i = 0; i < elemCount; i++)
+            if (*array[i] == element)
+                return true;
+        return false;
+    }
+    int findFirstIndexOf(T& element){
+        for (int i = 0; i < elemCount; i++)
+            if (*array[i] == &elemCount)
+                return i;
+        return -1;
+    }
+    T* get(int index) const{
         if (index < 0 || index >= elemCount) {
             std::cout << "POZA ZAKRESEM";
             std::string* exception = new std::string(" ");
@@ -69,7 +81,7 @@ public:
         }
         return array[index];
     }
-    int getElemCount(){
+    int getElemCount() const{
         return elemCount;
     }
 
@@ -80,6 +92,7 @@ public:
     int getArrayLength() const {
         return arrayLength;
     }
+
 };
 
 
