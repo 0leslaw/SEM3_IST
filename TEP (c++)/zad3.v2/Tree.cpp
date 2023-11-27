@@ -15,8 +15,7 @@ void Tree::setupTree(std::string& value) {
     setupTreeHelper(currentIndex,value,*treeRoot);
     if (*currentIndex<value.length())
         cout<<"UCIETO WYRAZENIE - ZA DUZO ARGUMENTOW"<<endl;
-    preorderPrint();
-    printVars();
+
     delete currentIndex;
 }
 //TODO czy sprawdzac wyjscie za zakres na kazdym currentIndex++
@@ -168,7 +167,6 @@ double Tree::computeHelper(const ArrayList<int> &parameterSet, Node &root) {
     //var
     if(root.value[0] > 92 && root.value[0] < 123){
         int* i = new int(0);
-        //TODO TU COS SIE WALI
         while(*i < varList->getElemCount()) {
             if (*varList->get(*i) == root.value)
                 break;
@@ -189,7 +187,6 @@ double Tree::computeHelper(const ArrayList<int> &parameterSet, Node &root) {
 
 void Tree::joinTreeWithThis(string &value) {
     *this =*this + Tree(value);
-    preorderPrint();
 }
 
 ArrayList<string> *Tree::getVarList() {
@@ -219,8 +216,8 @@ Tree Tree::operator+(const Tree &other) {
         currentRoot->getArgList()->setAt(0,*tempOther->getRoot());
     }
     if (!tempOther->isVarListNULLorEmpty()){
-        for (int i = 0; i < tempThis.getVarListConst().getElemCount(); i++)
-            tempThis.getVarList()->add(*new string(*tempThis.getVarListConst().get(i)));
+        for (int i = 0; i < tempOther->getVarListConst().getElemCount(); i++)
+            tempThis.getVarList()->add(*new string(*tempOther->getVarListConst().get(i)));
     }
     return tempThis;
 }
@@ -295,7 +292,7 @@ bool Tree::isVarListNULLorEmpty() const{
 }
 
 Tree::~Tree() {
-    cout<< "Usunięto drzewo: "+treeRoot->getValue()+"MÓJ PANIE!"<<endl;
+//    cout<< "Usunięto drzewo: "+treeRoot->getValue()+"MÓJ PANIE!"<<endl;
     delete treeRoot;
     delete varList;
 }

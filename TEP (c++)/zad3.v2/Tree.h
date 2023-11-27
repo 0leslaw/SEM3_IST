@@ -57,9 +57,8 @@ public:
     bool isArgListNULLorEmpty() {
         return argList == NULL || argCount() == 0;
     }
-//TODO zapytaj co tu powinno sie robic
     ~Node() {
-        cout<< "Usunieto node: "+value+" Moj panie!"<<endl;
+//        cout<< "Usunieto node: "+value+" Moj panie!"<<endl;
         if(argList != NULL)
             delete argList;
     }
