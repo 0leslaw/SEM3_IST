@@ -8,7 +8,7 @@
 #include <cmath>
 // Tree stuff
 Tree::Tree() : treeRoot(NULL), varList(new ArrayList<string>()){}
-
+//AUTODESCRIPTIVE
 void Tree::setupTree(std::string& value) {
     int* currentIndex = new int(0);
     treeRoot = new Node();
@@ -18,7 +18,8 @@ void Tree::setupTree(std::string& value) {
 
     delete currentIndex;
 }
-//TODO czy sprawdzac wyjscie za zakres na kazdym currentIndex++
+//TAKES IN INT POINTER WHICH IT TREATS AS STRING ITERATOR AND RECURSIVELY A ROOT FOR
+//WHICH IT TRIES TO ASSIGN ITS FIELDS BASED ON THE INPUT STRING
 void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
     skipSpaces(value,currentIndex);
     if (*currentIndex >= value.length()) {
@@ -98,7 +99,8 @@ void Tree::setupTreeHelper(int *currentIndex, std::string &value, Node& root) {
     }else
         fintNextIndAfterFail(root,value,currentIndex);
 }
-
+//THIS TAKES THE POINTER TO INT VAL AND TREATS IT AS ITERATOR OF THE STRING
+//ARRAY, RETURNS REQUIRED INDEX
 void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
     // while we have a char suggesting a missclick
     root.setValue(*new std::string("1"));
@@ -116,7 +118,7 @@ void Tree::fintNextIndAfterFail(Node &root,string& value, int* currentIndex) {
         (*currentIndex)++;
     }
 }
-
+//AUTODESCRIPTIVE
 void Tree::skipSpaces(string &value,int *currentIndex) {
     while (value[*currentIndex] == 32)
         (*currentIndex)++;
@@ -126,14 +128,14 @@ void Tree::preorderPrint() {
     preorderPrintHelper(*treeRoot);
     cout << endl;
 }
-
+//RECURSIVELY PRINTS NODE VALUES
 void Tree::preorderPrintHelper(Node &root) {
     cout << (root.getValue())+"; ";
     if (!root.isArgListNULLorEmpty())
         for (int i = 0; i < root.argCount(); i++)
             preorderPrintHelper(*(root.getArgAt(i)));
 }
-
+//CALCULATES TREE EQUATION
 double Tree::computeForSetParameters(const ArrayList<int> &parameterSet) {
     if (parameterSet.getElemCount() != varList->getElemCount()) {
         cout << "ZLA ILOSC PARARMETROW";
@@ -143,6 +145,8 @@ double Tree::computeForSetParameters(const ArrayList<int> &parameterSet) {
         return computeHelper(parameterSet,*treeRoot);
     }
 }
+//TAKES IN PARAMETERSET FOR WHICH IT CALCULATES EQUATION RECURSIVELY WHICH CONVENIANTLY
+//WILL CALCULATE THE LEAFS FIRST AND THEN PROPAGATE UP THE TREE
 double Tree::computeHelper(const ArrayList<int> &parameterSet, Node &root) {
     //operators
     // *
@@ -185,22 +189,23 @@ double Tree::computeHelper(const ArrayList<int> &parameterSet, Node &root) {
     else return false;
 }
 
+//TAKES FURTHEST LEFT LEAF AND CHANGES IT TO THE ROOT OF TREE CREATED FROM  "value"
 void Tree::joinTreeWithThis(string &value) {
     *this =*this + Tree(value);
 }
-
+//AUTODESCRIPTIVE
 ArrayList<string> *Tree::getVarList() {
     return varList;
 }
-
+//AUTODESCRIPTIVE
 Node *Tree::getRoot() const{
     return treeRoot;
 }
-
+//AUTODESCRIPTIVE
 void Tree::setRoot(Node *newRoot) {
     treeRoot = newRoot;
 }
-
+//AUTODESCRIPTIVE
 Tree Tree::operator+(const Tree &other) {
     //find any leaf
     Tree tempThis(*this);
@@ -221,17 +226,7 @@ Tree Tree::operator+(const Tree &other) {
     }
     return tempThis;
 }
-
-//Tree &Tree::operator=(Tree &other) {
-//    if(this == &other)
-//        return *this;
-//    varList = new ArrayList<string>();
-//    for (int i = 0; i < other.getVarList()->getElemCount(); i++)
-//        varList->add(*new string(*other.getVarList()->get(i)));
-//    treeRoot = new Node(*other.getRoot());
-//    return *this;
-//}
-
+//AUTODESCRIPTIVE
 Tree::Tree(const Tree &other) {
     varList = new ArrayList<string>();
     if (other.getRoot() == NULL){
@@ -246,36 +241,37 @@ Tree::Tree(const Tree &other) {
     }
     preorderPrint();
 }
-
+//AUTODESCRIPTIVE
 ArrayList<string> &Tree::getVarListConst() const {
     return *varList;
 }
-
+//AUTODESCRIPTIVE
 void Tree::addVariable(string &value) {
     if (varList == NULL)
         varList = new ArrayList<string>();
     varList->add(value);
 }
-
+//AUTODESCRIPTIVE
 bool Tree::isNextTrygon(const int *currentIndex, string &value) {
     return *currentIndex+3 < value.length() &&  (value.substr(*currentIndex,3) == "sin" ||
                                                 value.substr(*currentIndex,3) == "cos");
 }
-
+//AUTODESCRIPTIVE
 bool Tree::isNextOperator(const int *currentIndex, string &value) {
     return value[*currentIndex] == 42
            || value[*currentIndex] == 43
            || value[*currentIndex] == 45
            || value[*currentIndex] == 47;
 }
-
+//AUTODESCRIPTIVE
 bool Tree::isNextNumber(const int *currentIndex, string &value) {
     return value[*currentIndex] > 47 && value[*currentIndex] < 58;
 }
-
+//AUTODESCRIPTIVE
 bool Tree::isNextVar(const int *currentIndex, string &value) {
     return value[*currentIndex] > 96 && value[*currentIndex] < 123;
 }
+//AUTODESCRIPTIVE
 void Tree::printVars(){
     if (!isVarListNULLorEmpty()) {
         std::cout << "lista zmiennych:\n";
@@ -286,31 +282,31 @@ void Tree::printVars(){
     }else
         std::cout << "BRAK ZMIENNYCH" << std::endl;
 }
-
+//AUTODESCRIPTIVE
 bool Tree::isVarListNULLorEmpty() const{
     return varList == NULL || varList->getElemCount() == 0;
 }
-
+//AUTODESCRIPTIVE
 Tree::~Tree() {
 //    cout<< "Usunięto drzewo: "+treeRoot->getValue()+"MÓJ PANIE!"<<endl;
     delete treeRoot;
     delete varList;
 }
-
+//AUTODESCRIPTIVE
 Tree::Tree(string &value) {
     treeRoot = NULL;
     varList = new ArrayList<string>();
     setupTree(value);
 }
-
+//AUTODESCRIPTIVE
 Tree &Tree::operator=(const Tree &other) {
     if (this != &other){
         delete varList;
         delete treeRoot;
         varList = NULL;
         treeRoot = NULL;
-        if (!other.isVarListNULLorEmpty())
-            varList = new ArrayList<string>(other.getVarListConst());
+
+        varList = new ArrayList<string>(other.getVarListConst());
         if (other.getRoot() != NULL)
             treeRoot = new Node(*other.getRoot());
     }else

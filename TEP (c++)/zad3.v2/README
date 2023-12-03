@@ -33,3 +33,37 @@ DO TEGO
             for (int i = 0; i < other.argCount(); i++)
                 this->addArg(*new Node(*other.getArgList()->get(i)));
     }
+
+KOLEJNY ROZWIĄZANY PROBLEM
+PRZY "COMP" DRZEW WYSTĘPOWAŁ PROBLEM Z ODCZYTYWANIEM ARRAYLISTY DRZEWA,
+OKAZAŁO SIĘ ŻE PROBLEM WYSTĘPUJE TYLKO PRZY WCZESNIEJSZYM "JOIN", WYNIKAŁO TO Z PRZEOCZENIA
+PRZYPADKU W KTÓRYM NIE ZINICJALIZUJEMY LISTY
+
+BYLO TAK
+    Tree &Tree::operator=(const Tree &other) {
+        if (this != &other){
+            delete varList;
+            delete treeRoot;
+            varList = NULL;
+            treeRoot = NULL;
+            if (!other.isVarListNULLorEmpty())
+                varList = new ArrayList<string>(other.getVarListConst());
+            if (other.getRoot() != NULL)
+                treeRoot = new Node(*other.getRoot());
+        }else
+            return *this;
+    }
+JEST TAK
+    Tree &Tree::operator=(const Tree &other) {
+        if (this != &other){
+            delete varList;
+            delete treeRoot;
+            varList = NULL;
+            treeRoot = NULL;
+
+            varList = new ArrayList<string>(other.getVarListConst());
+            if (other.getRoot() != NULL)
+                treeRoot = new Node(*other.getRoot());
+        }else
+            return *this;
+    }

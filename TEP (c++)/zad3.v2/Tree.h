@@ -16,11 +16,11 @@ private:
     std::string value;
     ArrayList<Node>* argList;
 public:
+    // ALL ARE AUTODESCRIPTIVE
     Node(std::string& value) {
         this->value = value;
         argList = NULL;
     }
-// in case of new arraylist it will loop endlessly, //TODO zapytac
     Node() {
         argList = NULL;
     }

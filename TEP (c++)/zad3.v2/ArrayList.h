@@ -2,6 +2,7 @@
 // Created by Hyperbook on 13.11.2023.
 //
 
+//BASIC ARRAYLIST IMPLEMENTATION
 #ifndef ZAD3_V2_ARRAYLIST_H
 #define ZAD3_V2_ARRAYLIST_H
 #include <iostream>
