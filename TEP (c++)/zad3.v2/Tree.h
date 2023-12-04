@@ -10,11 +10,11 @@
 
 using namespace std;
 class Tree;
-
+template<class T>
 class Node {
 private:
     std::string value;
-    ArrayList<Node>* argList;
+    ArrayList<Node<T> >* argList;
 public:
     // ALL ARE AUTODESCRIPTIVE
     Node(std::string& value) {
