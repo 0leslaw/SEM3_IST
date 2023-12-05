@@ -1,13 +1,9 @@
-#include <iostream>
-#include "Tree.h"
+
+#include "ConsoleInterface.h"
 
 int main() {
-    Tree* tree = new Tree();
-    string *s = new string("sin 144554 23");
-    tree->setupTree(*s);
-    Tree tree1 = *new Tree(*tree);
-    tree1.preorderPrint();
-//    tree->joinTreeWithThis(*s);
-//    tree->preorderPrint();
+
+    ConsoleInterface consoleInterface;
+    consoleInterface.run();
     return 0;
 }
