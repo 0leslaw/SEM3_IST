@@ -41,7 +41,7 @@
 					"fragment" : "-g -fdiagnostics-color=always"
 				},
 				{
-					"fragment" : "-std=gnu++98"
+					"fragment" : "-std=gnu++11"
 				}
 			],
 			"language" : "CXX",
@@ -51,7 +51,7 @@
 				[
 					1
 				],
-				"standard" : "98"
+				"standard" : "11"
 			},
 			"sourceIndexes" : 
 			[
@@ -107,7 +107,8 @@
 			[
 				2,
 				4,
-				6
+				6,
+				7
 			]
 		}
 	],
@@ -150,6 +151,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "ConsoleInterface.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "MySmartPointer.h",
 			"sourceGroupIndex" : 1
 		}
 	],

@@ -38,7 +38,6 @@ public:
             for (int i = 0; i < other.argCount(); i++)
                 this->addArg(*new Node<T>(*other.getArgList()->get(i)));
     }
-
     void setValue(std::string &s) {
         value = s;
     }
@@ -95,6 +94,7 @@ public:
     Tree(string& value);
     Tree<T> operator+(const Tree<T>& other);
     Tree<T>& operator=(const Tree<T>& other);
+    void operator=(Tree<T>&& other);
     Tree(const Tree<T>& other);
     ~Tree();
     void setupTree(std::string& value);
@@ -113,9 +113,14 @@ public:
     int getType();
 };
 
-
-
-
+template<class T>
+void Tree<T>::operator=(Tree<T> &&other) {
+    treeRoot = other.treeRoot;
+    varList = other.varList;
+    other.treeRoot = NULL;
+    other.varList = NULL;
+}
+//type getting funcitons
 template<>
 inline int Tree<int>::getType() {
     return 1;
@@ -524,7 +529,7 @@ string Tree<T>::computeHelperString(const ArrayList<string> &parameterSet, Node<
         delete i;
         return (*parameterSet.get(ii)).substr(1,root.value.length()-2);
     }
-    else return false;
+    else return NULL;
 }
 //TAKES IN PARAMETERSET FOR WHICH IT CALCULATES EQUATION RECURSIVELY WHICH CONVENIANTLY
 //WILL CALCULATE THE LEAFS FIRST AND THEN PROPAGATE UP THE Tree<T>
@@ -612,7 +617,9 @@ Tree<T> Tree<T>::operator+(const Tree<T> &other) {
         for (int i = 0; i < tempOther->getVarListConst().getElemCount(); i++)
             tempThis.getVarList()->add(*new string(*tempOther->getVarListConst().get(i)));
     }
-    return tempThis;
+    tempOther->treeRoot = NULL;
+    delete tempOther;
+    return std::move(tempThis);
 }
 //AUTODESCRIPTIVE
 template <typename T>

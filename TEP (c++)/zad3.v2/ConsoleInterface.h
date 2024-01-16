@@ -21,6 +21,7 @@ template <class T>
 ConsoleInterface<T>::ConsoleInterface() {
 
 }
+
 template <class T>
 void ConsoleInterface<T>::run() {
     string acc;

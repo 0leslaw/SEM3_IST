@@ -51,25 +51,25 @@ build cmake_object_order_depends_target_zad3_v2: phony || CMakeFiles/zad3_v2.dir
 
 build CMakeFiles/zad3_v2.dir/main.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/main.cpp || cmake_object_order_depends_target_zad3_v2
   DEP_FILE = CMakeFiles\zad3_v2.dir\main.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++98
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++11
   OBJECT_DIR = CMakeFiles\zad3_v2.dir
   OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
 
 build CMakeFiles/zad3_v2.dir/Tree.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/Tree.cpp || cmake_object_order_depends_target_zad3_v2
   DEP_FILE = CMakeFiles\zad3_v2.dir\Tree.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++98
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++11
   OBJECT_DIR = CMakeFiles\zad3_v2.dir
   OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
 
 build CMakeFiles/zad3_v2.dir/ArrayList.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/ArrayList.cpp || cmake_object_order_depends_target_zad3_v2
   DEP_FILE = CMakeFiles\zad3_v2.dir\ArrayList.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++98
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++11
   OBJECT_DIR = CMakeFiles\zad3_v2.dir
   OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
 
 build CMakeFiles/zad3_v2.dir/ConsoleInterface.cpp.obj: CXX_COMPILER__zad3_v2_Debug C$:/Users/Hyperbook/Documents/GitHub/SEM3_IST/TEP$ (c++)/zad3.v2/ConsoleInterface.cpp || cmake_object_order_depends_target_zad3_v2
   DEP_FILE = CMakeFiles\zad3_v2.dir\ConsoleInterface.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++98
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++11
   OBJECT_DIR = CMakeFiles\zad3_v2.dir
   OBJECT_FILE_DIR = CMakeFiles\zad3_v2.dir
 
